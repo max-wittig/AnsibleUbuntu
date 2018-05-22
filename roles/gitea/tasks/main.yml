@@ -1,0 +1,21 @@
+---
+- include_vars: vars.yml
+
+- name: Creates directory
+  file: path=/opt/gitea/ state=directory
+
+- name: Write template to file
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/gitea/docker-compose.yml
+
+- name: Stop gitea docker
+  shell: /usr/local/bin/docker-compose -f /opt/gitea/docker-compose.yml down
+
+- name: Copy config to path
+  template:
+    src: app.ini.j2
+    dest: /opt/gitea/gitea/gitea/conf/app.ini
+
+- name: Start gitea docker image
+  shell: /usr/local/bin/docker-compose -f /opt/gitea/docker-compose.yml up -d

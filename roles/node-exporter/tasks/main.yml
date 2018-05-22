@@ -1,0 +1,10 @@
+---
+- include_role:
+    name: cloudalchemy.node-exporter
+  vars:
+    node_exporter_version: 0.16.0
+    node_exporter_enabled_collectors:
+      - devstat
+      - systemd
+      - logind
+      - tcpstat

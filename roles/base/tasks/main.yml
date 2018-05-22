@@ -1,0 +1,5 @@
+---
+- name: Run ansible galaxy
+  local_action: command ansible-galaxy install -r requirements.yml --ignore-errors
+
+- include_tasks: ubuntu-essentials.yml

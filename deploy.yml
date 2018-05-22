@@ -1,0 +1,11 @@
+---
+- hosts: web
+  roles:
+    - base
+    - docker
+    - nvm
+    - myapplications
+    - gitea
+    - prometheus
+    - grafana
+    - nginx

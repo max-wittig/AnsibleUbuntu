@@ -1,0 +1,35 @@
+---
+- name: Install docker dependencies
+  become: true
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+
+- name: Add docker GPG key
+  become: true
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    state: present
+
+- name: Add docker repository
+  become: true
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic edge
+    state: present
+
+- name: Install docker-ce
+  become: true
+  apt:
+    update_cache: yes
+    name: docker-ce
+    state: latest
+    install_recommends: no
+
+- import_tasks: install-docker-compose.yml

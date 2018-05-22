@@ -1,0 +1,23 @@
+---
+- name: Clone link shortener from GitHub
+  git:
+    repo: https://github.com/max-wittig/link_shortener.git
+    dest: /opt/link_shortener
+    update: yes
+    clone: yes
+
+- name: Build docker image
+  docker_image:
+    nocache: yes
+    path: /opt/link_shortener
+    name: link_shortener
+    force: yes
+
+- name: Run docker image
+  docker_container:
+    name: link_shortener
+    image: link_shortener
+    restart_policy: "always"
+    exposed_ports: 5000
+    published_ports: 5000:5000
+    detach: yes

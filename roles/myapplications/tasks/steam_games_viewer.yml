@@ -1,0 +1,28 @@
+---
+- include_vars: vars.yml
+
+- name: Clone steam games viewer shortener from GitHub
+  git:
+    repo: https://github.com/max-wittig/SteamGamesViewer.git
+    dest: /opt/steam_games_viewer
+    update: yes
+    clone: yes
+
+- name: Build docker image
+  docker_image:
+    nocache: yes
+    path: /opt/steam_games_viewer
+    force: yes
+    name: steam_games_viewer
+
+- name: Run docker image
+  docker_container:
+    name: steam_games_viewer
+    image: steam_games_viewer
+    exposed_ports: 4000
+    published_ports: 4000:4000
+    restart_policy: "always"
+    detach: yes
+    env:
+      STEAM_API_KEY: "{{ steam_api_key }}"
+      BASE_URL: "/steam"
