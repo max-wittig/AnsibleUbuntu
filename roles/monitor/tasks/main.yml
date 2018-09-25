@@ -1,0 +1,15 @@
+---
+- name: Create required folders
+  file: "path=/opt/monitor/{{ item }} state=directory"
+  with_items:
+    - grafana
+    - prometheus
+
+- name: Copy docker-compose
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/monitor/docker-compose.yml
+
+- name: Run docker-compose
+  chdir: /opt/monitor/
+  shell: /usr/local/bin/docker-compose -f docker-compose.yml up

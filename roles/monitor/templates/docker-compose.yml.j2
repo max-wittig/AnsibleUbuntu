@@ -1,0 +1,20 @@
+version: 3.7
+
+services:
+  prometheus:
+    image: prom/prometheus:${PROMETHEUS_VERSION:latest}
+    ports:
+      - "9090:9090"
+    command: 
+      - --config.file=/etc/prometheus/prometheus.yml
+    restart: always
+    volumes:
+      - /etc/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+  grafana:
+    image: grafana/grafana:${GRAFANA_VERSION:latest}
+    depends_on: 
+      - prometheus
+    restart: always
+    ports:
+      - "8000:8000"
