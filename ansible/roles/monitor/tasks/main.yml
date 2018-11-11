@@ -1,0 +1,73 @@
+---
+- name: Monitor | Include required vars
+  include_vars: vars.yml
+  tags:
+    - monitor
+    - grafana
+    - prometheus
+
+- name: Monitor | Create required dirs
+  file:
+    state: directory
+    path: "{{ monitor_dir }}"
+    owner: "{{ username }}"
+  tags:
+    - monitor
+    - grafana
+    - prometheus
+  become: yes
+
+- name: Monitor | Create docker-compose file
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ monitor_dir }}/docker-compose.yml"
+    force: yes
+  tags:
+    - monitor
+    - grafana
+    - prometheus
+
+- name: Monitor | Create grafana datasources file
+  template:
+    src: datasources.yml.j2
+    dest: "{{ grafana_datasources_location }}"
+    force: yes
+  tags:
+    - monitor
+    - grafana
+
+- name: Monitor | Create prometheus config
+  template:
+    src: prometheus.yml.j2
+    dest: "{{ prometheus_config_location }}"
+    force: yes
+  tags:
+    - monitor
+    - prometheus
+
+- name: Monitor | Stop docker-compose
+  command: /usr/local/bin/docker-compose down
+  args:
+    chdir: "{{ monitor_dir }}"
+  tags:
+    - monitor
+    - grafana
+    - prometheus
+
+- name: Monitor | Build monitor
+  command: /usr/local/bin/docker-compose build --no-cache
+  args:
+    chdir: "{{ monitor_dir }}"
+  tags:
+    - monitor
+    - grafana
+    - prometheus
+
+- name: Monitor | Run monitor
+  command: /usr/local/bin/docker-compose up -d
+  args:
+    chdir: "{{ monitor_dir }}"
+  tags:
+    - monitor
+    - grafana
+    - prometheus

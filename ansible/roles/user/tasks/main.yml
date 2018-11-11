@@ -1,0 +1,47 @@
+---
+- name: Docker | Create docker group
+  group:
+    name: docker
+  become: yes
+  tags:
+    - user
+
+- name: User | Add user
+  user:
+    name: "{{ username }}"
+    shell: /bin/bash
+    groups: "sudo,docker"
+    password: "{{ user_pass }}"
+  become: yes
+  tags:
+    - user
+
+- name: User | Add SSH keys to authorized keys
+  authorized_key:
+    user: "{{ username }}"
+    key: "{{ item }}"
+    exclusive: true
+    state: present
+  with_file:
+    - files/ssh_keys.txt
+  become: yes
+  tags:
+    - user
+
+- name: User | Disallow root SSH access
+  lineinfile: 
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin no"
+    state: present
+  become: yes
+  tags:
+    - user
+
+- name: User | Restart SSH
+  systemd:
+    name: sshd
+    state: restarted
+  become: yes
+  tags:
+    - user

@@ -1,0 +1,20 @@
+---
+- name: MyApplications | Create opt dir
+  file:
+    path: /opt
+    state: directory
+  become: yes
+  tags:
+    - myapplications
+
+- name: MyApplications | Import Link Shortener
+  import_tasks: link_shortener.yml
+  tags:
+    - link_shortener
+    - myapplications
+- name: MyApplications | Import Steam Games Viewer
+  import_tasks: steam_games_viewer.yml
+  tags:
+    - steamgamesviewer
+    - myapplications
+- import_tasks: nodeapps.yml

@@ -1,0 +1,16 @@
+---
+- name: Docker | Include required vars
+  include_vars: vars.yml
+
+- name: Docker | Download docker-compose script
+  become: yes
+  get_url:
+    url: https://github.com/docker/compose/releases/download/{{ version }}/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    force: yes
+
+- name: Docker | Change permissions of compose script
+  become: yes
+  file: 
+    dest: /usr/local/bin/docker-compose
+    mode: a+x

@@ -1,0 +1,16 @@
+---
+#- hosts: initial
+#  roles:
+#    - user
+#  ignore_errors: yes
+
+- hosts: web
+  roles:
+    - user
+    - base
+    - docker
+    - nvm
+    - myapplications
+    - gitea
+    - monitor
+    - nginx

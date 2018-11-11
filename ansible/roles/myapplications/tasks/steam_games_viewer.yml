@@ -1,0 +1,30 @@
+---
+- name: SteamGamesViewer | Include required vars
+  include_vars: vars.yml
+
+- name: SteamGamesViewer | Clone from GitHub
+  git:
+    repo: https://github.com/max-wittig/SteamGamesViewer.git
+    dest: /opt/steam_games_viewer
+    update: yes
+    clone: yes
+  become: yes
+
+- name: SteamGamesViewer | Build docker image
+  docker_image:
+    nocache: "true"
+    path: /opt/steam_games_viewer
+    force: "true"
+    name: steam_games_viewer
+
+- name: SteamGamesViewer | Run docker image
+  docker_container:
+    name: steam_games_viewer
+    image: steam_games_viewer
+    exposed_ports: "4000"
+    published_ports: 4000:4000
+    restart_policy: "always"
+    detach: "true"
+    env:
+      STEAM_API_KEY: "{{ steam_api_key }}"
+      BASE_URL: "/steam"

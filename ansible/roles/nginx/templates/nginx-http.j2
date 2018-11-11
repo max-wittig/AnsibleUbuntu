@@ -1,0 +1,13 @@
+server_tokens off;
+
+server {
+    listen 80 default_server;
+    server_name {{ domain }};
+
+    location /.well-known/acme-challenge {
+        root /var/www/letsencrypt;
+        try_files $uri $uri/ =404;
+    }
+
+    rewrite ^(.*) https://$server_name$1 permanent;
+}

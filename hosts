@@ -1,6 +1,0 @@
-web:
-  vars:
-    ansible_connection: ssh
-    ansible_ssh_user: root
-  hosts:
-    maxwittig.ddns.net:

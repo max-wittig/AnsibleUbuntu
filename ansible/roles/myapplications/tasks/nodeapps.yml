@@ -1,0 +1,23 @@
+---
+- name: NodeApps | Clone Nodeapps from GitHub
+  git:
+    repo: https://github.com/max-wittig/NodeApps.git
+    dest: /opt/nodeapps
+    update: yes
+    clone: yes
+  become: yes
+
+- name: NodeApps | Build docker image
+  docker_image:
+    nocache: "true"
+    path: /opt/nodeapps
+    name: nodeapps
+    force: "true"
+
+- name: NodeApps | Run docker image
+  docker_container:
+    name: nodeapps
+    image: nodeapps
+    exposed_ports: "3000"
+    published_ports: 3000:3000
+    detach: "true"

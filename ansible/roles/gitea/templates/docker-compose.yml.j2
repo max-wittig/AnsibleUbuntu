@@ -1,0 +1,24 @@
+version: "3.3"
+
+
+services:
+  server:
+    image: "gitea/gitea:{{ gitea_version }}"
+    restart: always
+    volumes:
+      - ./gitea:/data
+    ports:
+      - "7000:3000"
+      - "{{ ssh_port }}:{{ ssh_port }}"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:9.6
+    restart: always
+    environment:
+      POSTGRES_USER: {{ postgres_user }}
+      POSTGRES_PASSWORD: {{ postgres_pass }}
+      POSTGRES_DB: {{ postgres_db }}
+    volumes:
+      - ./postgres:/var/lib/postgresql/data

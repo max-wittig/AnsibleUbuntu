@@ -1,0 +1,30 @@
+---
+- name: Nvm | Include required vars
+  include_vars: vars.yml
+  tags:
+    - nvm
+
+- name: Nvm | Get nvm install script
+  get_url:
+    url: https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh
+    dest: "{{ NVM_TMP_DIR }}"
+  tags:
+    - nvm
+
+- name: Nvm | Changing perm of nvm script
+  file: 
+    dest: "{{NVM_TMP_DIR}}"
+    mode: a+x
+  tags:
+    - nvm
+
+- name: Nvm | Run nvm install script
+  command: "{{NVM_TMP_DIR}}"
+  tags:
+    - nvm
+
+- name: Nvm | Install node
+  shell: ". /home/{{ username }}/.nvm/nvm.sh && nvm install v10"
+  tags:
+    - nvm
+  become: yes

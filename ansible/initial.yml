@@ -1,0 +1,4 @@
+---
+- hosts: initial
+  roles:
+    - user

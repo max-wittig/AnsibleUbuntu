@@ -1,0 +1,97 @@
+---
+- name: Nginx | Include required vars
+  include_vars: vars.yml
+  tags:
+    - nginx
+
+- name: Nginx | Install requirements
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+     - nginx
+     - letsencrypt
+  become: yes
+
+- name: Nginx | Create letsencrypt directory
+  file: 
+    name: /var/www/letsencrypt 
+    state: directory
+  tags:
+    - nginx
+  become: yes
+
+- name: Nginx | Remove default nginx config
+  file: 
+    name: /etc/nginx/sites-enabled/default
+    state: absent
+  tags:
+    - nginx
+  become: yes
+
+- name: Nginx | Install system nginx config
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    force: yes
+  tags:
+    - nginx
+  become: yes
+
+- name: Nginx | Install nginx site for letsencrypt requests
+  template:
+    src: nginx-http.j2
+    dest: /etc/nginx/sites-enabled/http
+    force: yes
+  tags:
+    - nginx
+  become: yes
+
+- name: Nginx | Restart nginx
+  service:
+    name: nginx
+    state: restarted
+  become: yes
+  tags:
+    - nginx
+
+- name: Create letsencrypt certificate
+  command: "letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ email }} --agree-tos -d {{ domain }}"
+  args:
+    creates: /etc/letsencrypt/live/{{ domain }}
+  tags:
+    - nginx
+  become: yes
+
+- name: Generate dhparams
+  shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
+  args:
+    creates: /etc/nginx/dhparams.pem
+  tags:
+    - nginx
+  become: yes
+
+- name: Install nginx site for specified site
+  template:
+    src: nginx-le.j2
+    dest: /etc/nginx/sites-enabled/le
+  tags:
+    - nginx
+  become: yes
+
+- name: Nginx | Add letsencrypt cronjob for cert renewal
+  cron:
+    name: letsencrypt_renewal
+    special_time: weekly
+    job: letsencrypt --renew certonly -n --webroot -w /var/www/letsencrypt -m {{ email }} --agree-tos -d {{ domain }}
+  become: yes
+  tags:
+    - nginx
+
+- name: Nginx | Reload nginx
+  service:
+    name: nginx
+    state: reloaded
+  become: yes
+  tags:
+    - nginx

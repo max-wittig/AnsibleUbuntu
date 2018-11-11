@@ -1,0 +1,62 @@
+---
+version: '3.3'
+
+services:
+  grafana:
+    image: "grafana/grafana:{{ grafana_version }}"
+    ports:
+      - "8000:8000"
+    environment:
+      GF_INSTALL_PLUGINS: grafana-clock-panel
+      GF_SERVER_HTTP_PORT: 8000
+      GF_SERVER_DOMAIN: "{{ domain }}/grafana/"
+      GF_SERVER_ROOT_URL: "https://{{ domain }}/grafana/"
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: "{{ grafana_admin_password }}"
+      GF_AUTH_GITHUB_ENABLED: "true"
+      GF_AUTH_GITHUB_SCOPES: "user:email,read:org"
+      GF_AUTH_GITHUB_ALLOWED_ORGANIZATIONS: "GrafanaOAuthOrg"
+      GF_AUTH_GITHUB_ALLOW_SIGN_UP: "true"
+      GF_AUTH_GITHUB_CLIENT_ID: "{{ github_client_id }}"
+      GF_AUTH_GITHUB_CLIENT_SECRET: "{{ github_client_secret }}"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_NAME: Anonymous
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+    volumes:
+      - "{{ grafana_datasources_location }}:/etc/grafana/provisioning/datasources/datasources.yml:Z"
+      - grafana_data:/var/lib/grafana
+    restart: always
+
+  prometheus:
+    image: "prom/prometheus:{{ prometheus_version }}"
+    expose:
+      - "9090"
+    volumes:
+      - "{{ prometheus_config_location }}:/opt/prometheus/prometheus.yml:Z"
+      - prometheus_data:/prometheus
+    command: 
+      - "--config.file=/opt/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention=120d"
+      - "--storage.tsdb.path=/prometheus"
+    restart: always
+
+  node_exporter:
+    image: "prom/node-exporter:{{ node_exporter_version }}"
+    expose:
+      - "9100"
+    cap_add:
+      - SYS_TIME
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points="^(/rootfs|/host|)/(sys|proc|dev|host|etc)($$|/)"'
+      - '--collector.filesystem.ignored-fs-types="^(sys|proc|auto|cgroup|devpts|ns|au|fuse\.lxc|mqueue)(fs|)$$"'
+    restart: always
+
+volumes:
+  grafana_data:
+  prometheus_data:

@@ -1,0 +1,5 @@
+---
+- name: Base | Import Ubuntu Essentials
+  import_tasks: ubuntu-essentials.yml
+  tags:
+    - base
