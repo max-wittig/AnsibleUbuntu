@@ -1,9 +1,9 @@
 ---
-docker_compose_version: 1.23.1
-grafana_version: 5.3.2
+docker_compose_version: 1.23.2
+grafana_version: 5.4.1
 prometheus_version: v2.5.0
 node_exporter_version: v0.16.0
-gitea_version: 1.6.0
+gitea_version: 1.6.1
 
 username: max
 user_pass: $6$fdgfdg543tgtrjhg$DqiNrNKWtvRxVzs/P4xvCtnWfNSlEynvjUXB037qc/2w6FB/ngiWBbBx0qMaapPHxFcXyY0HNgoDQnecjFRs71
