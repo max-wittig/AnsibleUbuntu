@@ -1,9 +1,4 @@
 ---
-#- hosts: initial
-#  roles:
-#    - user
-#  ignore_errors: yes
-
 - hosts: web
   roles:
     - user

@@ -2,3 +2,4 @@ venv
 vault_pass.txt
 /deploy.retry
 .env
+.terraform

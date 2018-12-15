@@ -28,7 +28,7 @@ services:
     restart: always
 
   prometheus:
-    image: "prom/prometheus:{{ prometheus_version }}"
+    image: "prom/prometheus:v{{ prometheus_version }}"
     expose:
       - "9090"
     volumes:
@@ -41,7 +41,7 @@ services:
     restart: always
 
   node_exporter:
-    image: "prom/node-exporter:{{ node_exporter_version }}"
+    image: "prom/node-exporter:v{{ node_exporter_version }}"
     expose:
       - "9100"
     cap_add:
