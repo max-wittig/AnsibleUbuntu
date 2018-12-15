@@ -12,3 +12,8 @@ resource "digitalocean_droplet" "web" {
   monitoring = "false"
   ssh_keys = ["23597109", "20943250", "20980721"]
 }
+
+resource "digitalocean_domain" "default" {
+  name       = "maxwittig.xyz"
+  ip_address = "${digitalocean_droplet.web.ipv4_address}"
+}
