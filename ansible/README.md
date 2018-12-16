@@ -37,3 +37,8 @@
     ```bash
     pipenv run deploy
     ```
+
+## Backup Gitea
+
+1. Set the local backup directory in group_vars
+1. Run `pipenv run gitea_backup`

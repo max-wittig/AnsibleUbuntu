@@ -1,12 +1,12 @@
-version: "3.3"
-
+version: "3.7"
 
 services:
   server:
     image: "gitea/gitea:{{ gitea_version }}"
     restart: always
     volumes:
-      - ./gitea:/data
+      - /opt/gitea:/data
+      - /opt/gitea/backups:/data/gitea/backups
     ports:
       - "7000:3000"
       - "{{ ssh_port }}:{{ ssh_port }}"
@@ -21,4 +21,4 @@ services:
       POSTGRES_PASSWORD: {{ postgres_pass }}
       POSTGRES_DB: {{ postgres_db }}
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - /opt/gitea/postgres:/var/lib/postgresql/data

@@ -1,0 +1,2 @@
+---
+local_backup_dir: "{{ gitea_local_backup_dir }}"

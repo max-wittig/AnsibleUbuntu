@@ -4,10 +4,13 @@ server {
     listen 80 default_server;
     server_name {{ domain }};
 
-    location /.well-known/acme-challenge {
-        root /var/www/letsencrypt;
-        try_files $uri $uri/ =404;
+    location ^~ /.well-known/acme-challenge/ {
+        default_type "text/plain";
+        root    {{web_root}}/letsencrypt;
     }
 
-    rewrite ^(.*) https://$server_name$1 permanent;
+    location / {
+        rewrite ^(.*) https://$server_name$1 permanent;
+    }
+    
 }

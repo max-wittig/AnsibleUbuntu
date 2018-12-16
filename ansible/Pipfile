@@ -12,3 +12,4 @@ jmespath = "*"
 [scripts]
 deploy = "ansible-playbook -v --vault-id vault_pass.txt deploy.yml"
 initial_deploy = "ansible-playbook --vault-id vault_pass.txt initial.yml"
+gitea_backup = "ansible-playbook -v --vault-id vault_pass.txt addons/backup-gitea.yml"

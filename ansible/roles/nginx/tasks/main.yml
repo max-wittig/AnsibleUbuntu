@@ -6,16 +6,16 @@
 
 - name: Nginx | Install requirements
   apt:
-    name: "{{ packages }}"
-  vars:
-    packages:
-     - nginx
-     - letsencrypt
+    name:
+      - nginx
+      - letsencrypt
   become: yes
+  tags:
+    - nginx
 
 - name: Nginx | Create letsencrypt directory
   file: 
-    name: /var/www/letsencrypt 
+    name: "{{ web_root }}/letsencrypt"
     state: directory
   tags:
     - nginx
@@ -56,7 +56,7 @@
     - nginx
 
 - name: Create letsencrypt certificate
-  command: "letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ email }} --agree-tos -d {{ domain }}"
+  command: "letsencrypt certonly -n --webroot -w {{ web_root }}/letsencrypt -m {{ email }} --agree-tos -d {{ domain }}"
   args:
     creates: /etc/letsencrypt/live/{{ domain }}
   tags:
@@ -83,7 +83,7 @@
   cron:
     name: letsencrypt_renewal
     special_time: weekly
-    job: letsencrypt --renew certonly -n --webroot -w /var/www/letsencrypt -m {{ email }} --agree-tos -d {{ domain }}
+    job: "letsencrypt --renew certonly -n --webroot -w {{ web_root }}/letsencrypt -m {{ email }} --agree-tos -d {{ domain }}"
   become: yes
   tags:
     - nginx

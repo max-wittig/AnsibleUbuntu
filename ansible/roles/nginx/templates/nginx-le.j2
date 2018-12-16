@@ -86,6 +86,6 @@ server {
     ssl_dhparam /etc/nginx/dhparams.pem;
     ssl_prefer_server_ciphers on;
 
-    root /var/www/{{ domain }};
+    root {{ web_root }};
     index index.html index.htm;
 }

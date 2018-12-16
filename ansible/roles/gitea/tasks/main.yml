@@ -11,6 +11,9 @@
   with_items:
     - /opt/gitea/
     - /opt/gitea/conf/
+    - /opt/gitea/gitea/
+    - /opt/gitea/gitea/conf/
+    - /opt/gitea/backups
   tags:
     - gitea
   become: yes
@@ -25,7 +28,7 @@
   become: yes
 
 - name: Gitea | Stop gitea docker
-  command: /usr/local/bin/docker-compose down
+  command: "{{ docker_compose }} down"
   args:
     chdir: /opt/gitea/
   tags:
@@ -34,7 +37,7 @@
 - name: Gitea | Copy config to path
   template:
     src: app.ini.j2
-    dest: /opt/gitea/gitea/gitea/conf/app.ini
+    dest: /opt/gitea/gitea/conf/app.ini
     force: yes
   tags:
     - gitea
