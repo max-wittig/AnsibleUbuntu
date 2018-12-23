@@ -21,6 +21,8 @@
       - git
       - wget
       - curl
+      - unzip
+      - zip
     force_apt_get: yes
   become: yes
 
