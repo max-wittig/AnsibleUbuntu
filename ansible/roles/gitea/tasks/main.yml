@@ -44,7 +44,57 @@
   become: yes
 
 - name: Gitea | Start gitea docker image
-  command: /usr/local/bin/docker-compose up -d
+  command: "{{ docker_compose }} up -d"
+  args:
+    chdir: /opt/gitea/
+  tags:
+    - gitea
+
+- name: Gitea | Add OAuth2 Provider
+  command:
+  args:
+    argv:
+      - "{{ docker_compose }}"
+      - exec
+      - server
+      - /app/gitea/gitea
+      - admin
+      - auth
+      - add-oauth
+      - "-c"
+      - "/data/gitea/conf/app.ini"
+      - "--name={{ gitea_oauth_provider }}"
+      - "--provider={{ gitea_oauth_provider }}"
+      - "--key={{ gitea_client_id }}"
+      - "--secret={{ gitea_client_secret }}"
+    chdir: /opt/gitea/
+  tags:
+    - gitea
+  ignore_errors: yes
+
+- name: Gitea | Create user account
+  command:
+  args:
+    argv:
+      - "{{ docker_compose }}"
+      - exec
+      - server
+      - /app/gitea/gitea
+      - admin
+      - create-user
+      - "-c"
+      - "/data/gitea/conf/app.ini"
+      - "--name={{ gitea_default_user }}"
+      - "--password={{ gitea_default_password }}"
+      - "--email={{ gitea_email }}"
+      - "--admin"
+    chdir: /opt/gitea/
+  tags:
+    - gitea
+  ignore_errors: yes
+
+- name: Gitea | Restart gitea docker image
+  command: "{{ docker_compose }} restart"
   args:
     chdir: /opt/gitea/
   tags:

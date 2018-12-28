@@ -6,7 +6,7 @@ server {
 
     location ^~ /.well-known/acme-challenge/ {
         default_type "text/plain";
-        root    {{web_root}}/letsencrypt;
+        root    {{ web_root }}/letsencrypt;
     }
 
     location / {
