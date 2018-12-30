@@ -28,6 +28,13 @@
   tags:
     - gitea-backup
 
+- name: Gitea-Backup | Create pg-dump as Gitea Backup is not working
+  shell: "{{ docker_compose }} exec -u postgres db pg_dump -U gitea gitea > /opt/gitea/backups/gitea-$(date +%F_%T).sql"
+  args:
+    chdir: /opt/gitea/
+  tags:
+    - gitea-backup
+
 - name: Gitea-Backup | Get backups
   find:
     paths: /opt/gitea/backups
@@ -35,13 +42,32 @@
   tags:
     - gitea-backup
 
+- name: Gitea-Backup | Change owner of backup files
+  file:
+    state: directory
+    path: /opt/gitea/backups
+    recurse: yes
+    owner: "{{ username }}"
+  become: yes
+  tags:
+    - gitea-backup
+
+- name: Gitea-Backup | Create local backup folder
+  local_action:
+    module: file
+    state: directory
+    path: "{{ local_backup_dir }}"
+  tags:
+    - gitea-backup
+
 - name: Gitea-Backup | Fetch backup to local machine
   fetch:
     src: "{{ item.path }}"
     dest: "{{ local_backup_dir }}/{{ item.path | basename }}"
+    flat: yes
   with_items:
     - "{{ backups.files }}"
-  become: yes
+  become: no
   tags:
     - gitea-backup
 

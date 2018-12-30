@@ -26,4 +26,4 @@ email: !vault |
 
 domain: maxwittig.xyz
 docker_compose: /usr/local/bin/docker-compose
-gitea_local_backup_dir: /home/max/Documents
+gitea_local_backup_dir: ~/Documents/gitea-backups

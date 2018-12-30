@@ -22,3 +22,4 @@ services:
       POSTGRES_DB: {{ postgres_db }}
     volumes:
       - /opt/gitea/postgres:/var/lib/postgresql/data
+      - /opt/gitea/backups:/var/lib/postgres/backups
