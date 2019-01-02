@@ -27,4 +27,3 @@
   shell: ". /home/{{ username }}/.nvm/nvm.sh && nvm install v{{ node_version }}"
   tags:
     - nvm
-  become: yes

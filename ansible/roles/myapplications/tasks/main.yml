@@ -12,9 +12,21 @@
   tags:
     - link_shortener
     - myapplications
+
 - name: MyApplications | Import Steam Games Viewer
   import_tasks: steam_games_viewer.yml
   tags:
     - steamgamesviewer
     - myapplications
-- import_tasks: nodeapps.yml
+
+- name: MyApplications | Import NodeApps
+  import_tasks: nodeapps.yml
+  tags:
+    - nodeapps
+    - myapplications
+
+- name: MyApplications | Import Startpage
+  import_tasks: startpage.yml
+  tags:
+    - startpage
+    - myapplications

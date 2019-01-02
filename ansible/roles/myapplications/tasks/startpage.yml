@@ -1,0 +1,39 @@
+---
+# this requires gitea to be setup, will be on GitHub once project is done
+- name: Startpage | Include required vars
+  include_vars: vars.yml
+
+- name: Startpage | Clone startpage from Gitea
+  git:
+    repo: "https://max-wittig:{{ gitea_clone_token }}@maxwittig.xyz/gitea/max-wittig/startpage.git"
+    dest: /opt/startpage
+    update: yes
+    clone: yes
+    force: yes
+  become: yes
+
+- name: Startpage | Change owner of directory
+  file:
+    state: directory
+    path: /opt/startpage
+    recurse: yes
+    owner: "{{ username }}"
+  become: yes
+
+- name: Startpage | Install requirements
+  shell: ". ~/.nvm/nvm.sh && npm install"
+  args:
+    chdir: /opt/startpage
+  environment:
+    NODE_OPTIONS: "--max_old_space_size=1024"
+
+- name: Startpage | Build startpage
+  shell: ". ~/.nvm/nvm.sh && npm run build"
+  args:
+    chdir: /opt/startpage
+  environment:
+    NODE_OPTIONS: "--max_old_space_size=512"
+
+- name: Startpage | Move assets into web_dir
+  shell: "mv /opt/startpage/dist/startpage/* {{ web_root }}/"
+  become: yes
