@@ -22,7 +22,7 @@
     - gitea-backup
 
 - name: Gitea-Backup | Create backup archive 
-  command: "{{ docker_compose }} exec -w /data/gitea/backups server /app/gitea/gitea dump -c /data/gitea/conf/app.ini"
+  command: "{{ docker_compose }} exec -u git -w /data/gitea/backups server /app/gitea/gitea dump -c /data/gitea/conf/app.ini"
   args:
     chdir: /opt/gitea/
   tags:
