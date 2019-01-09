@@ -22,3 +22,8 @@ scrape_configs:
     static_configs:
     - targets:
       - {{ bernard_host }}:80
+  - job_name: gitea
+    metrics_path: /gitea/metrics
+    static_configs:
+    - targets:
+      - maxwittig.xyz:80
