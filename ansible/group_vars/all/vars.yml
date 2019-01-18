@@ -3,7 +3,7 @@ docker_compose_version: 1.23.2
 grafana_version: 5.4.1
 prometheus_version: 2.5.0
 node_exporter_version: 0.17.0
-gitea_version: 1.7.0-rc2
+gitea_version: 1.7.0-rc3
 nvm_version: 0.33.11
 node_version: 10
 

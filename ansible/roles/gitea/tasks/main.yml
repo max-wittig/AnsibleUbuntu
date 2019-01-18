@@ -56,6 +56,8 @@
     argv:
       - "{{ docker_compose }}"
       - exec
+      - -u
+      - git
       - server
       - /app/gitea/gitea
       - admin
@@ -78,6 +80,8 @@
     argv:
       - "{{ docker_compose }}"
       - exec
+      - -u
+      - git
       - server
       - /app/gitea/gitea
       - admin
