@@ -5,7 +5,7 @@
 
 - name: Startpage | Clone startpage from Gitea
   git:
-    repo: "https://max-wittig:{{ gitea_clone_token }}@maxwittig.xyz/gitea/max-wittig/startpage.git"
+    repo: "{{ startpage_clone_url }}"
     dest: /opt/startpage
     update: yes
     clone: yes
@@ -25,14 +25,14 @@
   args:
     chdir: /opt/startpage
   environment:
-    NODE_OPTIONS: "--max_old_space_size=1024"
+    NODE_OPTIONS: "--max_old_space_size=256"
 
 - name: Startpage | Build startpage
   shell: ". ~/.nvm/nvm.sh && npm run build"
   args:
     chdir: /opt/startpage
   environment:
-    NODE_OPTIONS: "--max_old_space_size=512"
+    NODE_OPTIONS: "--max_old_space_size=256"
 
 - name: Startpage | Move assets into web_dir
   shell: "mv /opt/startpage/dist/startpage/* {{ web_root }}/"

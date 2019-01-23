@@ -1,11 +1,11 @@
 ---
-docker_compose_version: 1.23.2
-grafana_version: 5.4.1
-prometheus_version: 2.5.0
-node_exporter_version: 0.17.0
-gitea_version: 1.7.0-rc3
-nvm_version: 0.33.11
-node_version: 10
+docker_compose_version: 1.23.2  # https://github.com/docker/compose/releases
+grafana_version: 5.4.3          # https://github.com/grafana/grafana/releases
+prometheus_version: 2.6.1       # https://github.com/prometheus/prometheus/releases
+node_exporter_version: 0.17.0   # https://github.com/prometheus/node_exporter/releases
+gitea_version: 1.7.0            # https://github.com/go-gitea/gitea/releases
+nvm_version: 0.34.0             # https://github.com/creationix/nvm/releases
+node_version: 11.7.0            # https://github.com/nodejs/node/releases
 
 username: max
 user_pass: $6$fdgfdg543tgtrjhg$DqiNrNKWtvRxVzs/P4xvCtnWfNSlEynvjUXB037qc/2w6FB/ngiWBbBx0qMaapPHxFcXyY0HNgoDQnecjFRs71

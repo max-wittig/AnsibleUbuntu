@@ -12,13 +12,6 @@
   tags:
     - docker
 
-- name: Docker | Install pip docker dependencies
-  pip:
-    name:
-      - docker
-  tags:
-    - docker
-
 - name: Docker | Add docker GPG key
   become: yes
   apt_key:
@@ -50,4 +43,9 @@
   import_tasks: install-docker-compose.yml
   tags:
     - docker-compose
+    - docker
+
+- name: Docker | Prune all images
+  command: docker system prune -a -f
+  tags:
     - docker
