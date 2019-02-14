@@ -1,0 +1,70 @@
+---
+- name: Swap | Include required vars
+  include_vars: vars.yml
+  tags:
+    - swap
+
+- name: Swap | Set swap_file variable
+  set_fact:
+    swap_file: "{{ swap_file_path }}"
+  tags:
+    - swap
+
+- name: Swap | Check if swap file exists
+  stat:
+    path: "{{ swap_file }}"
+  register: swap_file_check
+  tags:
+    - swap
+
+- name: Swap | Create swap file
+  command: fallocate -l {{ swap_file_size }} {{ swap_file }}
+  when: not swap_file_check.stat.exists
+  become: yes
+  tags:
+    - swap
+
+- name: Swap | Change swap file permissions
+  file:
+    path: "{{swap_file}}"
+    owner: root
+    group: root
+    mode: 0600
+  become: yes
+  tags:
+    - swap
+
+- name: Swap | Format swap file
+  become: yes
+  command: "mkswap {{ swap_file }}"
+  when: not swap_file_check.stat.exists
+  tags:
+    - swap
+
+- name: Swap | Write swap entry in fstab
+  mount: 
+    name: none
+    src: "{{ swap_file }}"
+    fstype: swap
+    opts: sw
+    passno: "0"
+    dump: "0"
+    state: present
+  become: yes
+  tags:
+    - swap
+
+- name: Swap | Turn on swap
+  become: yes
+  command: swapon -a
+  when: not swap_file_check.stat.exists
+  tags:
+    - swap
+
+- name: Swap | Set swappiness
+  become: yes
+  sysctl:
+    name: vm.swappiness
+    value: "{{ swappiness }}"
+  tags:
+    - swap

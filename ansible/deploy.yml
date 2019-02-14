@@ -2,6 +2,7 @@
 - hosts: web
   roles:
     - user
+    - swap
     - base
     - docker
     - nvm
