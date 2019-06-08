@@ -1,0 +1,29 @@
+---
+- name: LunchBot | Include required vars
+  include_vars: vars.yml
+
+- name: LunchBot | Clone from GitHub
+  git:
+    repo: https://github.com/max-wittig/LunchBot.git
+    dest: /opt/lunchbot
+    update: yes
+    clone: yes
+  become: yes
+
+- name: LunchBot | Build docker image
+  docker_image:
+    nocache: "true"
+    path: /opt/lunchbot
+    force: "true"
+    name: lunchbot
+
+- name: LunchBot | Run docker image
+  docker_container:
+    name: lunchbot
+    image: lunchbot
+    restart_policy: "always"
+    detach: "true"
+    env:
+      CLIENT_ID: "{{ lunchbot.client_id }}"
+      CLIENT_SECRET: "{{ lunchbot.client_secret }}"
+      CONVERSATION_ID: "{{ lunchbot.conversation_id }}"

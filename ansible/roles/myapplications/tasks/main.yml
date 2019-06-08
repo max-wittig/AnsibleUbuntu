@@ -30,3 +30,9 @@
   tags:
     - startpage
     - myapplications
+
+- name: MyApplications | Import LunchBot
+  import_tasks: lunchbot.yml
+  tags:
+    - lunchbot
+    - myapplications
