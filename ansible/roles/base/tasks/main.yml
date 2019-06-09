@@ -3,3 +3,16 @@
   import_tasks: ubuntu-essentials.yml
   tags:
     - base
+
+- name: Base | Get hostname
+  shell: lsb_release -r | awk '{print $2}'
+  register: hostname
+  tags:
+    - base
+
+- name: Base | Set hostname
+  hostname:
+    name: "ubuntu-{{ hostname.stdout | replace('.', '-') }}"
+  become: yes
+  tags:
+    - base
