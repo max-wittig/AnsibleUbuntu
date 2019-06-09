@@ -12,6 +12,13 @@
   tags:
     - docker
 
+- name: Docker | Install ansible pip docker dependencies
+  pip:
+    name:
+      - docker
+  tags:
+    - docker
+
 - name: Docker | Add docker GPG key
   become: yes
   apt_key:
