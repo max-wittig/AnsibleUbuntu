@@ -36,3 +36,9 @@
   tags:
     - lunchbot
     - myapplications
+
+- name: MyApplications | Import Gitea-Mirror
+  import_tasks: gitea_mirror.yml
+  tags:
+    - gitea-mirror
+    - myapplications

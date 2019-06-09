@@ -1,0 +1,24 @@
+---
+- name: Gitea-Mirror | Include required vars
+  include_vars: vars.yml
+
+- name: Gitea-Mirror | Clone from GitHub
+  git:
+    repo: https://github.com/max-wittig/gitea-mirror.git
+    dest: /opt/gitea-mirror
+    update: yes
+    clone: yes
+  become: yes
+
+- name: Gitea-Mirror | Build docker image
+  docker_image:
+    nocache: "true"
+    path: /opt/gitea-mirror
+    force: "true"
+    name: gitea-mirror
+
+- name: Gitea-Mirror | Add cronjob for weekly sync
+  cron:
+    name: gitea-mirror
+    job: docker run --rm -e GITEA_URL={{ gitea_mirror.gitea_url }} -e MIRROR_ORG={{ gitea_mirror.mirror_org }} -e GITEA_TOKEN={{ gitea_mirror.gitea_token }} -e GITHUB_TOKEN={{ gitea_mirror.github_token }} gitea-mirror
+    special_time: weekly
