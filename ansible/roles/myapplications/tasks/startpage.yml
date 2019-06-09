@@ -21,14 +21,14 @@
   become: yes
 
 - name: Startpage | Install requirements
-  shell: ". ~/.nvm/nvm.sh && npm install"
+  shell: ". ~/.nvm/nvm.sh && yarn"
   args:
     chdir: /opt/startpage
   environment:
     NODE_OPTIONS: "--max_old_space_size=256"
 
 - name: Startpage | Build startpage
-  shell: ". ~/.nvm/nvm.sh && npm run build"
+  shell: ". ~/.nvm/nvm.sh && yarn build"
   args:
     chdir: /opt/startpage
   environment:

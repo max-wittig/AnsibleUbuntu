@@ -13,17 +13,23 @@
 
 - name: Nvm | Changing perm of nvm script
   file: 
-    dest: "{{NVM_TMP_DIR}}"
+    dest: "{{ NVM_TMP_DIR }}"
     mode: a+x
   tags:
     - nvm
 
 - name: Nvm | Run nvm install script
-  command: "{{NVM_TMP_DIR}}"
+  command: "{{ NVM_TMP_DIR }}"
   tags:
     - nvm
 
 - name: Nvm | Install node
   shell: ". /home/{{ username }}/.nvm/nvm.sh install v{{ node_version }}"
+  tags:
+    - nvm
+
+- name: Nvm | Install yarn
+  shell: ". /home/{{ username }}/.nvm/nvm.sh && npm install -g yarn"
+  become: yes
   tags:
     - nvm
