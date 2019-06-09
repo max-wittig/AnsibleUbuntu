@@ -1,4 +1,4 @@
-# Ansible Playbook for Ubuntu 18.04 on a server
+# Ansible Playbook for Ubuntu on a server
 
 > Disclaimer: This may have no use to you.
 
