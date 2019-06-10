@@ -11,6 +11,7 @@
     clone: yes
     force: yes
   become: yes
+  register: git_cloned
 
 - name: Startpage | Change owner of directory
   file:
@@ -19,6 +20,7 @@
     recurse: yes
     owner: "{{ username }}"
   become: yes
+  when: git_cloned.changed
 
 - name: Startpage | Install requirements
   shell: ". ~/.nvm/nvm.sh && yarn"
@@ -26,6 +28,7 @@
     chdir: /opt/startpage
   environment:
     NODE_OPTIONS: "--max_old_space_size=256"
+  when: git_cloned.changed
 
 - name: Startpage | Build startpage
   shell: ". ~/.nvm/nvm.sh && yarn build"
@@ -33,7 +36,9 @@
     chdir: /opt/startpage
   environment:
     NODE_OPTIONS: "--max_old_space_size=256"
+  when: git_cloned.changed
 
 - name: Startpage | Move assets into web_dir
   shell: "mv /opt/startpage/dist/startpage/* {{ web_root }}/"
   become: yes
+  when: git_cloned.changed

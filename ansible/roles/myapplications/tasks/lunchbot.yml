@@ -9,6 +9,7 @@
     update: yes
     clone: yes
   become: yes
+  register: git_cloned
 
 - name: LunchBot | Build docker image
   docker_image:
@@ -18,14 +19,17 @@
       path: /opt/lunchbot
       pull: yes
     name: lunchbot
+    force_source: yes
+  when: git_cloned.changed
 
 - name: LunchBot | Run docker image
   docker_container:
     name: lunchbot
     image: lunchbot
     restart_policy: "always"
-    detach: "true"
+    detach: yes
     env:
       CLIENT_ID: "{{ lunchbot.client_id }}"
       CLIENT_SECRET: "{{ lunchbot.client_secret }}"
       CONVERSATION_ID: "{{ lunchbot.conversation_id }}"
+  when: git_cloned.changed

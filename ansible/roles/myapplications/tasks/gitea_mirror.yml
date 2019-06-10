@@ -9,8 +9,9 @@
     update: yes
     clone: yes
   become: yes
+  register: git_cloned
 
-- name: Link Shortener | Build docker image
+- name: Gitea-Mirror | Build docker image
   docker_image:
     source: build
     build:
@@ -18,9 +19,12 @@
       path: /opt/gitea-mirror
       pull: yes
     name: gitea-mirror
+    force_source: yes
+  when: git_cloned.changed
 
 - name: Gitea-Mirror | Add cronjob for weekly sync
   cron:
     name: gitea-mirror
     job: docker run --rm -e GITEA_URL={{ gitea_mirror.gitea_url }} -e MIRROR_ORG={{ gitea_mirror.mirror_org }} -e GITEA_TOKEN={{ gitea_mirror.gitea_token }} -e GITHUB_TOKEN={{ gitea_mirror.github_token }} gitea-mirror
     special_time: weekly
+  when: git_cloned.changed

@@ -6,6 +6,7 @@
     update: yes
     clone: yes
   become: yes
+  register: git_cloned
 
 - name: NodeApps | Build docker image
   docker_image:
@@ -15,6 +16,8 @@
       path: /opt/nodeapps
       pull: yes
     name: nodeapps
+    force_source: yes
+  when: git_cloned.changed
 
 - name: NodeApps | Run docker image
   docker_container:
@@ -22,4 +25,5 @@
     image: nodeapps
     exposed_ports: "3000"
     published_ports: 3000:3000
-    detach: "true"
+    detach: yes
+  when: git_cloned.changed
