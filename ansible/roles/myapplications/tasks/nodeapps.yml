@@ -9,10 +9,12 @@
 
 - name: NodeApps | Build docker image
   docker_image:
-    nocache: "true"
-    path: /opt/nodeapps
+    source: build
+    build:
+      nocache: yes
+      path: /opt/nodeapps
+      pull: yes
     name: nodeapps
-    force: "true"
 
 - name: NodeApps | Run docker image
   docker_container:

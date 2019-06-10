@@ -12,9 +12,11 @@
 
 - name: LunchBot | Build docker image
   docker_image:
-    nocache: "true"
-    path: /opt/lunchbot
-    force: "true"
+    source: build
+    build:
+      nocache: yes
+      path: /opt/lunchbot
+      pull: yes
     name: lunchbot
 
 - name: LunchBot | Run docker image

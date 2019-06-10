@@ -12,9 +12,11 @@
 
 - name: SteamGamesViewer | Build docker image
   docker_image:
-    nocache: "true"
-    path: /opt/steam_games_viewer
-    force: "true"
+    source: build
+    build:
+      nocache: yes
+      path: /opt/steam_games_viewer
+      pull: yes
     name: steam_games_viewer
 
 - name: SteamGamesViewer | Run docker image

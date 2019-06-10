@@ -10,11 +10,13 @@
     clone: yes
   become: yes
 
-- name: Gitea-Mirror | Build docker image
+- name: Link Shortener | Build docker image
   docker_image:
-    nocache: "true"
-    path: /opt/gitea-mirror
-    force: "true"
+    source: build
+    build:
+      nocache: yes
+      path: /opt/gitea-mirror
+      pull: yes
     name: gitea-mirror
 
 - name: Gitea-Mirror | Add cronjob for weekly sync

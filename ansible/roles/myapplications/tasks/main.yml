@@ -10,7 +10,7 @@
 - name: MyApplications | Import Link Shortener
   import_tasks: link_shortener.yml
   tags:
-    - link_shortener
+    - link-shortener
     - myapplications
 
 - name: MyApplications | Import Steam Games Viewer

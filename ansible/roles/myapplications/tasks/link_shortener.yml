@@ -1,24 +1,28 @@
 ---
 - name: Link Shortener | Clone link shortener from GitHub
   git:
-    repo: https://github.com/max-wittig/link_shortener.git
-    dest: /opt/link_shortener
+    repo: https://github.com/max-wittig/link-shortener.git
+    dest: /opt/link-shortener
     update: yes
     clone: yes
   become: yes
 
 - name: Link Shortener | Build docker image
   docker_image:
-    nocache: "true"
-    path: /opt/link_shortener
-    name: link_shortener
-    force: "true"
+    source: build
+    build:
+      nocache: yes
+      path: /opt/link-shortener
+      pull: yes
+    name: link-shortener
 
 - name: Link Shortener | Run docker image
   docker_container:
-    name: link_shortener
-    image: link_shortener
+    name: link-shortener
+    image: link-shortener
     restart_policy: "always"
     exposed_ports: "5000"
     published_ports: 5000:5000
     detach: "true"
+    env:
+      BASE_URL: "/short"
