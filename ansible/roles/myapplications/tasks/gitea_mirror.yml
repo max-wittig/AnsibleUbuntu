@@ -27,4 +27,3 @@
     name: gitea-mirror
     job: docker run --rm -e GITEA_URL={{ gitea_mirror.gitea_url }} -e MIRROR_ORG={{ gitea_mirror.mirror_org }} -e GITEA_TOKEN={{ gitea_mirror.gitea_token }} -e GITHUB_TOKEN={{ gitea_mirror.github_token }} gitea-mirror
     special_time: weekly
-  when: git_cloned.changed

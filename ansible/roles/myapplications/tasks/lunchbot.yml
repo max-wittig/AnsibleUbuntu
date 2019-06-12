@@ -32,4 +32,3 @@
       CLIENT_ID: "{{ lunchbot.client_id }}"
       CLIENT_SECRET: "{{ lunchbot.client_secret }}"
       CONVERSATION_ID: "{{ lunchbot.conversation_id }}"
-  when: git_cloned.changed

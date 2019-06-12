@@ -26,4 +26,3 @@
     exposed_ports: "3000"
     published_ports: 3000:3000
     detach: yes
-  when: git_cloned.changed

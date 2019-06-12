@@ -31,4 +31,3 @@
       BASE_URL: "/short"
     volumes:
       /opt/link-shortener/link-cache:/opt/link-shortener/link-cache:rw
-  when: git_cloned.changed
