@@ -1,0 +1,24 @@
+version: "3.3"
+
+services:
+  lunchbot:
+    build:
+      context: .
+    image: lunchbot:${VERSION-latest}
+    container_name: lunchbot
+    restart: always
+    depends_on:
+      - lunchbot-db
+    environment:
+      CLIENT_ID: "{{ client_id }}"
+      CLIENT_SECRET: "{{ client_secret }}"
+      MONGO_HOST: lunchbot-db
+
+  lunchbot-db:
+    image: "mongo:{{ mongo_version }}"
+    container_name: lunchbot-db
+    expose:
+      - "27017"
+    restart: always
+    volumes:
+      - "{{ db_dir }}:/data/db"

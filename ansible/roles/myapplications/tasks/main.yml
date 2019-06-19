@@ -31,12 +31,6 @@
     - startpage
     - myapplications
 
-- name: MyApplications | Import LunchBot
-  import_tasks: lunchbot.yml
-  tags:
-    - lunchbot
-    - myapplications
-
 - name: MyApplications | Import Gitea-Mirror
   import_tasks: gitea_mirror.yml
   tags:

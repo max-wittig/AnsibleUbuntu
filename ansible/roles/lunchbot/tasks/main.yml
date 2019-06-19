@@ -1,0 +1,57 @@
+---
+- name: LunchBot | Include required vars
+  include_vars: vars.yml
+  tags:
+    - lunchbot
+
+- name: LunchBot | Clone from GitHub
+  git:
+    repo: https://github.com/max-wittig/LunchBot.git
+    dest: /opt/lunchbot
+    update: yes
+    clone: yes
+    force: yes
+  become: yes
+  tags:
+    - lunchbot
+
+- name: LunchBot | Create db directory
+  file: 
+    path: "{{ db_dir }}"
+    state: directory
+  tags:
+    - lunchbot
+  become: yes
+
+- name: LunchBot | Write template to file
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/lunchbot/docker-compose.yml
+    force: yes
+  tags:
+    - lunchbot
+  become: yes
+
+- name: LunchBot | Stop LunchBot docker
+  command: "{{ docker_compose }} down"
+  args:
+    chdir: /opt/lunchbot/
+  tags:
+    - lunchbot
+
+- name: LunchBot | Build docker images
+  command: "{{ docker_compose }} build --no-cache"
+  args:
+    chdir: /opt/lunchbot/
+  tags:
+    - lunchbot
+
+- name: LunchBot | Start LunchBot docker image
+  command: "{{ docker_compose }} up -d"
+  args:
+    chdir: /opt/lunchbot/
+  tags:
+    - lunchbot
+  environment:
+    CLIENT_ID: "{{ client_id }}"
+    CLIENT_SECRET: "{{ client_secret }}"
