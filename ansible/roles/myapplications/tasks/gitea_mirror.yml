@@ -9,7 +9,6 @@
     update: yes
     clone: yes
   become: yes
-  register: git_cloned
 
 - name: Gitea-Mirror | Build docker image
   docker_image:
@@ -20,7 +19,6 @@
       pull: yes
     name: gitea-mirror
     force_source: yes
-  when: git_cloned.changed
 
 - name: Gitea-Mirror | Add cronjob for weekly sync
   cron:

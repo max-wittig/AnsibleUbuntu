@@ -6,7 +6,6 @@
     update: yes
     clone: yes
   become: yes
-  register: git_cloned
 
 - name: NodeApps | Build docker image
   docker_image:
@@ -17,7 +16,6 @@
       pull: yes
     name: nodeapps
     force_source: yes
-  when: git_cloned.changed
 
 - name: NodeApps | Run docker image
   docker_container:
