@@ -24,7 +24,9 @@
       - curl
       - unzip
       - zip
+      - ncdu
     force_apt_get: yes
+    autoremove: yes
   become: yes
 
 - name: Base | Check if reboot is required
