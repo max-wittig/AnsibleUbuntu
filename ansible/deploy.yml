@@ -10,4 +10,4 @@
     - gitea
     - monitor
     - nginx
-    #- lunchbot currently running on openshift online
+    - lunchbot
