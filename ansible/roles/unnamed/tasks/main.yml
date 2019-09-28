@@ -1,0 +1,12 @@
+---
+- name: unnamed | Import client
+  import_tasks: client.yml
+  tags:
+    - unnamed
+    - client
+
+- name: unnamed | Import server
+  import_tasks: server.yml
+  tags:
+    - unnamed
+    - server

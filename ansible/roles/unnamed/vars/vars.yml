@@ -1,0 +1,5 @@
+---
+unnamed_client_clone_url: https://maxwittig.xyz/gitea/max-wittig/unnamed-client.git
+unnamed_server_clone_url: https://maxwittig.xyz/gitea/max-wittig/unnamed.git
+web_root: /var/www/html
+secret_key: some-secret-key # TODO: Encrypt this

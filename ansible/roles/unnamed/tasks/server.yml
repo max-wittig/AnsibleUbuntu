@@ -1,0 +1,52 @@
+---
+- name: unnamed | Include required vars
+  include_vars: vars.yml
+  tags:
+    - unnamed
+
+- name: unnamed | Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /opt/unnamed/
+  become: yes
+
+- name: unnamed | Clone unnamed from Gitea
+  git:
+    repo: "{{ unnamed_server_clone_url }}"
+    dest: /opt/unnamed/server
+    update: yes
+    clone: yes
+    force: yes
+  become: yes
+
+- name: unnamed | Change owner of directory
+  file:
+    state: directory
+    path: /opt/unnamed/server
+    recurse: yes
+    owner: "{{ username }}"
+  become: yes
+
+- name: unnamed | Write template to file
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/unnamed/server/docker-compose.yml
+    force: yes
+  become: yes
+
+- name: unnamed | Stop unnamed docker
+  command: "{{ docker_compose }} down"
+  args:
+    chdir: /opt/unnamed/server/
+
+- name: unnamed | Pull images
+  command: "{{ docker_compose }} pull"
+  args:
+    chdir: /opt/unnamed/server/
+
+- name: unnamed | Start unnamed docker image
+  command: "{{ docker_compose }} up --build -d"
+  args:
+    chdir: /opt/unnamed/server/

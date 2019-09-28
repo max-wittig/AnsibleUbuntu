@@ -1,0 +1,62 @@
+---
+# this requires gitea to be setup, will be on GitHub once project is done
+- name: unnamed | Include required vars
+  include_vars: vars.yml
+
+- name: unnamed | Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /opt/unnamed/
+  become: yes
+
+- name: unnamed | Clone unnamed from Gitea
+  git:
+    repo: "{{ unnamed_client_clone_url }}"
+    dest: /opt/unnamed/client
+    update: yes
+    clone: yes
+    force: yes
+  become: yes
+
+- name: unnamed | Change owner of directory
+  file:
+    state: directory
+    path: /opt/unnamed/client
+    recurse: yes
+    owner: "{{ username }}"
+  become: yes
+
+- name: unnamed | Install requirements
+  shell: ". ~/.nvm/nvm.sh && yarn"
+  args:
+    chdir: /opt/unnamed/client
+  environment:
+    NODE_OPTIONS: "--max_old_space_size=256"
+
+- name: unnamed | Build unnamed
+  shell: ". ~/.nvm/nvm.sh && yarn build"
+  args:
+    chdir: /opt/unnamed/client
+  environment:
+    NODE_OPTIONS: "--max_old_space_size=256"
+    NODE_ENV: "prod"
+    BASE_URL: /unnamed
+    VUE_APP_WEBSOCKET_SERVER_URL: wss://maxwittig.xyz/unnamed-server
+
+- name: unnamed | Remove web directory
+  file:
+    path: "{{ web_root }}/unnamed"
+    state: absent
+  become: yes
+
+- name: unnamed | Create web directory
+  file:
+    path: "{{ web_root }}/unnamed"
+    state: directory
+  become: yes
+
+- name: unnamed | Move assets into web_dir
+  shell: "mv /opt/unnamed/client/dist/* {{ web_root }}/unnamed"
+  become: yes

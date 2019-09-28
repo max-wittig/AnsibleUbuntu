@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+  redis:
+    image: redis:5
+    restart: on-failure
+    expose:
+      - 6379
+
+  web:
+    restart: on-failure
+    build:
+      context: .
+      args:
+        SECRET_KEY: "{{ secret_key }}"
+    environment:
+      REDIS_IP: redis
+      SECRET_KEY: "{{ secret_key }}"
+    depends_on:
+      - redis
+    ports:
+      - "7500:8000"
