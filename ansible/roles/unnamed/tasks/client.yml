@@ -28,35 +28,28 @@
     owner: "{{ username }}"
   become: yes
 
-- name: unnamed | Install requirements
-  shell: ". ~/.nvm/nvm.sh && yarn"
-  args:
-    chdir: /opt/unnamed/client
-  environment:
-    NODE_OPTIONS: "--max_old_space_size=256"
+- name: unnamed | Build docker image
+  docker_image:
+    source: build
+    build:
+      nocache: yes
+      path: /opt/unnamed/client/
+      pull: yes
+    name: unnamed
+    force_source: yes
 
-- name: unnamed | Build unnamed
-  shell: ". ~/.nvm/nvm.sh && yarn build"
-  args:
-    chdir: /opt/unnamed/client
-  environment:
-    NODE_OPTIONS: "--max_old_space_size=256"
-    NODE_ENV: "prod"
-    BASE_URL: /unnamed
-    VUE_APP_WEBSOCKET_SERVER_URL: wss://maxwittig.xyz/unnamed-server
+- name: unnamed | Run docker image
+  docker_container:
+    name: unnamed
+    image: unnamed
+    published_ports: 7600:8080
+    detach: yes
+    env:
+      BASE_URL: /unnamed/
+      VUE_APP_WEBSOCKET_SERVER_URL: wss://maxwittig.xyz/unnamed-server
 
 - name: unnamed | Remove web directory
   file:
     path: "{{ web_root }}/unnamed"
     state: absent
-  become: yes
-
-- name: unnamed | Create web directory
-  file:
-    path: "{{ web_root }}/unnamed"
-    state: directory
-  become: yes
-
-- name: unnamed | Move assets into web_dir
-  shell: "mv /opt/unnamed/client/dist/* {{ web_root }}/unnamed"
   become: yes
