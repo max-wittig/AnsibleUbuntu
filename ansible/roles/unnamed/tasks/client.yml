@@ -41,7 +41,6 @@
     chdir: /opt/unnamed/client
   environment:
     NODE_OPTIONS: "--max_old_space_size=256"
-    NODE_ENV: "prod"
     BASE_URL: /unnamed
     VUE_APP_WEBSOCKET_SERVER_URL: wss://maxwittig.xyz/unnamed-server
 
