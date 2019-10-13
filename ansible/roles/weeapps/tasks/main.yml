@@ -1,12 +1,12 @@
 ---
-- name: unnamed | Import client
+- name: weeapps | Import client
   import_tasks: client.yml
   tags:
-    - unnamed
+    - weeapps
     - client
 
-- name: unnamed | Import server
+- name: weeapps | Import server
   import_tasks: server.yml
   tags:
-    - unnamed
+    - weeapps
     - server

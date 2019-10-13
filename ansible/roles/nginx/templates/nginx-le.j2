@@ -70,9 +70,9 @@ server {
         proxy_set_header X-Script-Name /grafana;
     }
 
-    # unnamed
-    location /unnamed-server {
-        rewrite /unnamed-server/(.*) /$1  break;
+    # weeapps
+    location /weeapps-server {
+        rewrite /weeapps-server/(.*) /$1  break;
         proxy_pass http://127.0.0.1:7500/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -82,11 +82,11 @@ server {
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
-        proxy_set_header X-Script-Name /unnamed-server;
+        proxy_set_header X-Script-Name /weeapps-server;
     }
 
-    # unnamed
-    location ^~ /unnamed {
+    # weeapps
+    location ^~ /weeapps {
         expires -1;
         add_header Pragma "no-cache";
         add_header Cache-Control "no-store, no-cache, must-revalidate, post-check=0, pre-check=0";

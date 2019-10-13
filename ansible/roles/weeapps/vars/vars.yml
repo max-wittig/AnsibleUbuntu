@@ -1,0 +1,5 @@
+---
+weeapps_client_clone_url: https://maxwittig.xyz/gitea/max-wittig/weeapps-client.git
+weeapps_server_clone_url: https://maxwittig.xyz/gitea/max-wittig/weeapps.git
+web_root: /var/www/html
+secret_key: some-secret-key # TODO: Encrypt this
