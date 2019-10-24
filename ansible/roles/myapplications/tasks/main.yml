@@ -19,12 +19,6 @@
     - steamgamesviewer
     - myapplications
 
-- name: MyApplications | Import NodeApps
-  import_tasks: nodeapps.yml
-  tags:
-    - nodeapps
-    - myapplications
-
 - name: MyApplications | Import Startpage
   import_tasks: startpage.yml
   tags:
