@@ -57,6 +57,17 @@ services:
       - '--collector.filesystem.ignored-fs-types="^(sys|proc|auto|cgroup|devpts|ns|au|fuse\.lxc|mqueue)(fs|)$$"'
     restart: always
 
+  openvpn-exporter:
+    image: kumina/openvpn-exporter
+    restart: always
+    expose:
+      - "9176"
+    volumes:
+      - /var/log/openvpn/status.log:/var/log/openvpn/status.log:ro
+    command:
+      - "-openvpn.status_paths"
+      - "/var/log/openvpn/status.log"
+
 volumes:
   grafana_data:
   prometheus_data:
