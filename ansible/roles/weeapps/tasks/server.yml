@@ -1,52 +1,25 @@
 ---
 - name: weeapps | Include required vars
   include_vars: vars.yml
-  tags:
-    - weeapps
-
-- name: weeapps | Create directories
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - /opt/weeapps/
-  become: yes
-
-- name: weeapps | Clone weeapps from Gitea
-  git:
-    repo: "{{ weeapps_server_clone_url }}"
-    dest: /opt/weeapps/server
-    update: yes
-    clone: yes
-    force: yes
-  become: yes
-
-- name: weeapps | Change owner of directory
-  file:
-    state: directory
-    path: /opt/weeapps/server
-    recurse: yes
-    owner: "{{ username }}"
-  become: yes
 
 - name: weeapps | Write template to file
   template:
     src: docker-compose.yml.j2
-    dest: /opt/weeapps/server/docker-compose.yml
+    dest: /opt/weeapps/backend/docker-compose.yml
     force: yes
   become: yes
 
 - name: weeapps | Stop weeapps docker
-  command: "{{ docker_compose }} down"
+  command: "{{ docker_compose }} down --remove-orphans"
   args:
-    chdir: /opt/weeapps/server/
+    chdir: /opt/weeapps/backend/
 
 - name: weeapps | Pull images
   command: "{{ docker_compose }} pull"
   args:
-    chdir: /opt/weeapps/server/
+    chdir: /opt/weeapps/backend/
 
 - name: weeapps | Start weeapps docker image
   command: "{{ docker_compose }} up --build -d"
   args:
-    chdir: /opt/weeapps/server/
+    chdir: /opt/weeapps/backend/

@@ -1,12 +1,38 @@
 ---
+- name: weeapps | Include required vars
+  include_vars: vars.yml
+  tags:
+    - weeapps
+
+- name: weeapps | Clone weeapps from Github
+  git:
+    repo: "{{ weeapps_clone_url }}"
+    dest: /opt/weeapps/
+    update: yes
+    clone: yes
+    force: yes
+  become: yes
+  tags:
+    - weeapps
+
+- name: weeapps | Change owner of directory
+  file:
+    state: directory
+    path: /opt/weeapps/
+    recurse: yes
+    owner: "{{ username }}"
+  become: yes
+  tags:
+    - weeapps
+
 - name: weeapps | Import client
   import_tasks: client.yml
   tags:
     - weeapps
-    - client
+    - weeapps-client
 
 - name: weeapps | Import server
   import_tasks: server.yml
   tags:
     - weeapps
-    - server
+    - weeapps-server

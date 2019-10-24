@@ -1,44 +1,18 @@
 ---
-# this requires gitea to be setup, will be on GitHub once project is done
 - name: weeapps | Include required vars
   include_vars: vars.yml
-
-- name: weeapps | Create directories
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - /opt/weeapps/
-  become: yes
-
-- name: weeapps | Clone weeapps from Gitea
-  git:
-    repo: "{{ weeapps_client_clone_url }}"
-    dest: /opt/weeapps/client
-    update: yes
-    clone: yes
-    force: yes
-  become: yes
-
-- name: weeapps | Change owner of directory
-  file:
-    state: directory
-    path: /opt/weeapps/client
-    recurse: yes
-    owner: "{{ username }}"
-  become: yes
 
 - name: weeapps | Install requirements
   shell: ". ~/.nvm/nvm.sh && yarn"
   args:
-    chdir: /opt/weeapps/client
+    chdir: /opt/weeapps/frontend
   environment:
     NODE_OPTIONS: "--max_old_space_size=256"
 
 - name: weeapps | Build weeapps
   shell: ". ~/.nvm/nvm.sh && yarn build"
   args:
-    chdir: /opt/weeapps/client
+    chdir: /opt/weeapps/frontend
   environment:
     NODE_OPTIONS: "--max_old_space_size=256"
     BASE_URL: /weeapps
@@ -57,5 +31,5 @@
   become: yes
 
 - name: weeapps | Move assets into web_dir
-  shell: "mv /opt/weeapps/client/dist/* {{ web_root }}/weeapps"
+  shell: "mv /opt/weeapps/frontend/dist/* {{ web_root }}/weeapps"
   become: yes
