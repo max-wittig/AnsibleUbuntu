@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   weeapps-redis:
-    image: redis:5
+    image: redis:{{redis_version}}
     restart: on-failure
     container_name: weeapps-redis
     expose:
