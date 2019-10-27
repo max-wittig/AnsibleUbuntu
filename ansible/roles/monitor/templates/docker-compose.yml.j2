@@ -1,6 +1,10 @@
 ---
 version: '3.7'
 
+networks:
+  loki:
+    driver: bridge
+
 services:
   grafana:
     image: "grafana/grafana:{{ grafana_version }}"
@@ -26,6 +30,8 @@ services:
       - "{{ grafana_datasources_location }}:/etc/grafana/provisioning/datasources/datasources.yml:Z"
       - grafana_data:/var/lib/grafana
     restart: always
+    networks:
+      - loki
 
   prometheus:
     image: "prom/prometheus:v{{ prometheus_version }}"
@@ -39,6 +45,8 @@ services:
       - "--storage.tsdb.retention=120d"
       - "--storage.tsdb.path=/prometheus"
     restart: always
+    networks:
+      - loki
 
   node_exporter:
     image: "prom/node-exporter:v{{ node_exporter_version }}"
@@ -56,6 +64,8 @@ services:
       - '--collector.filesystem.ignored-mount-points="^(/rootfs|/host|)/(sys|proc|dev|host|etc)($$|/)"'
       - '--collector.filesystem.ignored-fs-types="^(sys|proc|auto|cgroup|devpts|ns|au|fuse\.lxc|mqueue)(fs|)$$"'
     restart: always
+    networks:
+      - loki
 
   openvpn-exporter:
     image: kumina/openvpn-exporter
@@ -67,6 +77,8 @@ services:
     command:
       - "-openvpn.status_paths"
       - "/var/log/openvpn/status.log"
+    networks:
+      - loki
 
 volumes:
   grafana_data:

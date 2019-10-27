@@ -1,0 +1,49 @@
+---
+- name: Log | Include required vars
+  include_vars: vars.yml
+  tags:
+    - loki
+
+- name: Log | Create required dirs
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: "{{ username }}"
+  with_items:
+    - "/opt/log"
+  tags:
+    - loki
+  become: yes
+
+- name: Log | Copy log config files
+  template:
+    src: "{{ item }}.yml.j2"
+    dest: "{{ log_dir }}/{{ item }}.yml"
+    force: yes
+  with_items:
+    - loki-config
+    - docker-compose
+    - promtail-config
+  tags:
+    - loki
+
+- name: Log | Stop docker-compose
+  command: /usr/local/bin/docker-compose down
+  args:
+    chdir: "{{ log_dir }}"
+  tags:
+    - loki
+
+- name: Log | Build Log
+  command: /usr/local/bin/docker-compose build --no-cache
+  args:
+    chdir: "{{ log_dir }}"
+  tags:
+    - loki
+
+- name: Log | Run Log
+  command: /usr/local/bin/docker-compose up -d
+  args:
+    chdir: "{{ log_dir }}"
+  tags:
+    - loki

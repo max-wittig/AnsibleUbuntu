@@ -1,0 +1,26 @@
+version: "3.7"
+
+# This is created by monitor
+networks:
+  monitor_loki:
+    external: true
+
+services:
+  loki:
+    image: grafana/loki:v0.4.0
+    ports:
+      - "3100:3100"
+    volumes:
+      - /opt/log:/opt/log:ro
+    command: -config.file=/opt/log/loki-config.yml
+    networks:
+      - monitor_loki
+
+  promtail:
+    image: grafana/promtail:v0.4.0
+    volumes:
+      - /opt/log:/opt/log:ro
+      - /var/log:/var/log:ro
+    command: -config.file=/opt/log/promtail-config.yml
+    networks:
+      - monitor_loki

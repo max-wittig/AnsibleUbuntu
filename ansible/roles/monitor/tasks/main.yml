@@ -45,6 +45,15 @@
     - monitor
     - prometheus
 
+- name: Monitor | Stop docker-compose for log
+  command: /usr/local/bin/docker-compose down
+  args:
+    chdir: "/opt/log"
+  tags:
+    - monitor
+    - grafana
+    - prometheus
+
 - name: Monitor | Stop docker-compose
   command: /usr/local/bin/docker-compose down
   args:
@@ -67,6 +76,15 @@
   command: /usr/local/bin/docker-compose up -d
   args:
     chdir: "{{ monitor_dir }}"
+  tags:
+    - monitor
+    - grafana
+    - prometheus
+
+- name: Monitor | Start docker-compose for log
+  command: /usr/local/bin/docker-compose up -d
+  args:
+    chdir: "/opt/log"
   tags:
     - monitor
     - grafana
