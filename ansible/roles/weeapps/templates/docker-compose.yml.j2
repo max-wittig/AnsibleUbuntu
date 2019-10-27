@@ -18,7 +18,12 @@ services:
     environment:
       REDIS_IP: weeapps-redis
       SECRET_KEY: "{{ secret_key }}"
+    volumes:
+      - weeapps_db:/opt/weeapps/weeapps/
     depends_on:
       - weeapps-redis
     ports:
       - "7500:8000"
+
+volumes:
+  weeapps_db:

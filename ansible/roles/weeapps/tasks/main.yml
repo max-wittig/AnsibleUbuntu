@@ -3,6 +3,8 @@
   include_vars: vars.yml
   tags:
     - weeapps
+    - weeapps-server
+    - weeapps-client
 
 - name: weeapps | Clone weeapps from Github
   git:
@@ -14,6 +16,8 @@
   become: yes
   tags:
     - weeapps
+    - weeapps-server
+    - weeapps-client
 
 - name: weeapps | Change owner of directory
   file:
@@ -24,6 +28,8 @@
   become: yes
   tags:
     - weeapps
+    - weeapps-server
+    - weeapps-client
 
 - name: weeapps | Import client
   import_tasks: client.yml

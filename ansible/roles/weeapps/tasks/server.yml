@@ -20,6 +20,6 @@
     chdir: /opt/weeapps/backend/
 
 - name: weeapps | Start weeapps docker image
-  command: "{{ docker_compose }} up --build -d"
+  command: "{{ docker_compose }} up --build -d --force-recreate"
   args:
     chdir: /opt/weeapps/backend/
