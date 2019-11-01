@@ -3,7 +3,7 @@ docker_compose_version: 1.24.1  # https://github.com/docker/compose/releases
 grafana_version: 6.4.3          # https://github.com/grafana/grafana/releases
 prometheus_version: 2.13.1      # https://github.com/prometheus/prometheus/releases
 node_exporter_version: 0.18.1   # https://github.com/prometheus/node_exporter/releases
-gitea_version: 1.9.4            # https://github.com/go-gitea/gitea/releases
+gitea_version: 1.9.5            # https://github.com/go-gitea/gitea/releases
 nvm_version: 0.35.0             # https://github.com/creationix/nvm/releases
 node_version: 13.0.1            # https://github.com/nodejs/node/releases
 mongo_version: 4.2.1            # https://hub.docker.com/_/mongo
