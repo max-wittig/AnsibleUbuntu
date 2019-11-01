@@ -8,8 +8,8 @@ networks:
 services:
   loki:
     image: grafana/loki:v0.4.0
-    ports:
-      - "3100:3100"
+    expose:
+      - "3100"
     volumes:
       - /opt/log:/opt/log:ro
     command: -config.file=/opt/log/loki-config.yml
