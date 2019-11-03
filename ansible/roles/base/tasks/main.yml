@@ -16,3 +16,10 @@
   become: yes
   tags:
     - base
+
+- name: Base | Import fail2ban
+  import_tasks: fail2ban.yml
+  tags:
+    - base
+    - fail2ban
+

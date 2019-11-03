@@ -1,0 +1,16 @@
+---
+- name: Base | Install Fail2Ban
+  apt:
+    name:
+      - fail2ban
+    force_apt_get: yes
+    autoremove: yes
+  become: yes
+
+#- name: Base | Copy fail2ban config
+#  template:
+#    src: "{{ item }}.j2"
+#    dest: "/etc/fail2ban/{{ item }}"
+#  with_items:
+#    - "fail2ban.conf.local"
+#    - "jail.local"
