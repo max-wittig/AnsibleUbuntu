@@ -8,6 +8,7 @@ networks:
 services:
   loki:
     image: grafana/loki:v0.4.0
+    restart: always
     expose:
       - "3100"
     volumes:
@@ -18,6 +19,7 @@ services:
 
   promtail:
     image: grafana/promtail:v0.4.0
+    restart: always
     volumes:
       - /opt/log:/opt/log:ro
       - /var/log:/var/log:ro
