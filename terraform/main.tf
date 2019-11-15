@@ -1,12 +1,11 @@
-variable "do_token" {
-}
+variable "do_token" {}
 
 provider "digitalocean" {
   token = var.do_token
 }
 
 locals {
-  ssh_keys = split("\n", file("../ansible/roles/user/files/ssh_keys.txt"))
+  ssh_keys = split("\n", file(var.ssh_keys_file))
 }
 
 resource "digitalocean_ssh_key" "default" {
@@ -22,37 +21,4 @@ resource "digitalocean_droplet" "web" {
   size       = "s-1vcpu-1gb"
   monitoring = "false"
   ssh_keys   = local.ssh_keys
-}
-
-resource "digitalocean_domain" "default" {
-  name       = "maxwittig.xyz"
-  ip_address = digitalocean_droplet.web.ipv4_address
-}
-
-resource "digitalocean_record" "A" {
-  domain = digitalocean_domain.default.name
-  type   = "A"
-  name   = "@"
-  value  = digitalocean_droplet.web.ipv4_address
-}
-
-resource "digitalocean_record" "do1" {
-  domain = digitalocean_domain.default.name
-  type   = "NS"
-  name   = "@"
-  value  = "ns1.digitalocean.com."
-}
-
-resource "digitalocean_record" "do2" {
-  domain = digitalocean_domain.default.name
-  type   = "NS"
-  name   = "@"
-  value  = "ns2.digitalocean.com."
-}
-
-resource "digitalocean_record" "do3" {
-  domain = digitalocean_domain.default.name
-  type   = "NS"
-  name   = "@"
-  value  = "ns3.digitalocean.com."
 }
