@@ -1,0 +1,52 @@
+---
+# this requires gitea to be setup, will be on GitHub once project is done
+- name: Mastermind | Include required vars
+  include_vars: vars.yml
+
+- name: Mastermind | Clone mastermind from Gitea
+  git:
+    repo: "{{ mastermind_clone_url }}"
+    dest: /opt/mastermind
+    update: yes
+    clone: yes
+    force: yes
+  become: yes
+  register: git_cloned
+
+- name: Mastermind | Change owner of directory
+  file:
+    state: directory
+    path: /opt/mastermind
+    recurse: yes
+    owner: "{{ username }}"
+  become: yes
+  when: git_cloned.changed
+
+- name: Mastermind | Install requirements
+  shell: ". ~/.nvm/nvm.sh && yarn"
+  args:
+    chdir: /opt/mastermind
+  environment:
+    NODE_OPTIONS: "--max_old_space_size=256"
+  when: git_cloned.changed
+
+- name: Mastermind | Build mastermind
+  shell: ". ~/.nvm/nvm.sh && yarn build"
+  args:
+    chdir: /opt/mastermind
+  environment:
+    NODE_OPTIONS: "--max_old_space_size=256"
+    BASE_URL: /mastermind
+  when: git_cloned.changed
+
+- name: Mastermind | Create nginx directory
+  file:
+    path: "{{ web_root }}/mastermind/"
+    state: directory
+  become: yes
+  when: git_cloned.changed
+
+- name: Mastermind | Move assets into web_dir
+  shell: "mv /opt/mastermind/dist/* {{ web_root }}/mastermind/"
+  become: yes
+  when: git_cloned.changed

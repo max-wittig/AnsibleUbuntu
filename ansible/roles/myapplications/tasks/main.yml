@@ -30,3 +30,9 @@
   tags:
     - gitea-mirror
     - myapplications
+
+- name: MyApplications | Import Mastermind
+  import_tasks: mastermind.yml
+  tags:
+    - mastermind
+    - myapplications

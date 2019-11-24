@@ -6,6 +6,7 @@
     update: yes
     clone: yes
   become: yes
+  register: git_cloned
 
 - name: Link Shortener | Build docker image
   docker_image:
@@ -16,6 +17,7 @@
       pull: yes
     name: link-shortener
     force_source: yes
+  when: git_cloned.changed
 
 - name: Link Shortener | Run docker image
   docker_container:
@@ -29,3 +31,4 @@
       BASE_URL: "/short"
     volumes:
       /opt/link-shortener/link-cache:/opt/link-shortener/link-cache:rw
+  when: git_cloned.changed
