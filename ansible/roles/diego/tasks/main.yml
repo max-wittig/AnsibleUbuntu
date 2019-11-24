@@ -1,0 +1,51 @@
+---
+- name: Diego | Include required vars
+  include_vars: vars.yml
+  tags:
+    - diego
+
+- name: Diego | Create folder
+  file:
+    path: "{{ folder }}"
+    state: directory
+    group: "{{ username }}"
+    owner: "{{ username }}"
+  become: yes
+  tags:
+    - diego
+
+- name: Diego | Get release from GitHub
+  get_url:
+    url: "{{ binary_url }}"
+    dest: "{{ folder }}"
+    force: yes
+  tags:
+    - diego
+
+- name: Diego | Extract release
+  unarchive:
+    src: "{{ folder }}/diego-amd64-linux.zip"
+    dest: "{{ folder }}"
+    remote_src: yes
+  tags:
+    - diego
+
+- name: Diego | Create systemd unit service
+  template:
+    src: templates/diego.service.j2
+    dest: /etc/systemd/system/diego.service
+    mode: 664
+    owner: root
+  become: yes
+  tags:
+    - diego
+
+- name: Diego | Register diego
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    name: diego
+    state: restarted
+  become: yes
+  tags:
+    - diego

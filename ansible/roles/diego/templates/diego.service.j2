@@ -1,0 +1,10 @@
+[Unit]
+Description=Diego service
+After=network.target
+
+[Service]
+User={{ username }}
+ExecStart={{ binary_path }} -interval 5000 -prometheus -prometheus-port {{ port }}
+
+[Install]
+WantedBy=default.target

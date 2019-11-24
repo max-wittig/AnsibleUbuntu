@@ -9,6 +9,8 @@ node_version: 13.1.0            # https://github.com/nodejs/node/releases
 mongo_version: 4.2.1            # https://hub.docker.com/_/mongo
 redis_version: 5.0.6            # https://hub.docker.com/_/redis
 
+diego_version: 0.0.2            # https://github.com/max-wittig/diego/releases
+
 username: max
 user_pass: $6$fdgfdg543tgtrjhg$DqiNrNKWtvRxVzs/P4xvCtnWfNSlEynvjUXB037qc/2w6FB/ngiWBbBx0qMaapPHxFcXyY0HNgoDQnecjFRs71
 user_become_pass: !vault |

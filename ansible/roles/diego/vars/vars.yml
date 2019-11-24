@@ -1,0 +1,5 @@
+---
+binary_url: "https://github.com/max-wittig/diego/releases/download/v{{ diego_version }}/diego-amd64-linux.zip"
+folder: /opt/diego
+binary_path: "{{ folder }}/diego"
+port: 8888

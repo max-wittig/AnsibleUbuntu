@@ -4,7 +4,7 @@ global:
   scrape_timeout: 10s
 
   external_labels:
-    environment: ubuntu-18.10
+    environment: ubuntu
 
 scrape_configs:
   - job_name: prometheus
@@ -27,3 +27,8 @@ scrape_configs:
     static_configs:
     - targets:
       - openvpn-exporter:9176
+  - job_name: diego
+    metrics_path: /metrics
+    static_configs:
+    - targets:
+      - maxwittig.xyz:8888
