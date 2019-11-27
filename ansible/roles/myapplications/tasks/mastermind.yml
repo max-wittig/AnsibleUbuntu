@@ -39,6 +39,13 @@
     BASE_URL: /mastermind
   when: git_cloned.changed
 
+- name: Mastermind | Remove web directory
+  file:
+    path: "{{ web_root }}/mastermind/"
+    state: absent
+  become: yes
+  when: git_cloned.changed
+
 - name: Mastermind | Create nginx directory
   file:
     path: "{{ web_root }}/mastermind/"
