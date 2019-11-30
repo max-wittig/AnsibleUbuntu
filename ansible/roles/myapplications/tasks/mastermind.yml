@@ -1,9 +1,8 @@
 ---
-# this requires gitea to be setup, will be on GitHub once project is done
 - name: Mastermind | Include required vars
   include_vars: vars.yml
 
-- name: Mastermind | Clone mastermind from Gitea
+- name: Mastermind | Clone mastermind from Github
   git:
     repo: "{{ mastermind_clone_url }}"
     dest: /opt/mastermind

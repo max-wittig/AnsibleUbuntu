@@ -17,7 +17,7 @@ gitea_clone_token: !vault |
           35393832363864663134353638366632663939316137623738356263656133393866623633333234
           3736333935393362306635316565666131396133396666323761
 startpage_clone_url: https://max-wittig:{{ gitea_clone_token }}@maxwittig.xyz/gitea/max-wittig/startpage.git
-mastermind_clone_url: https://maxwittig.xyz/gitea/max-wittig/mastermind.git
+mastermind_clone_url: https://github.com/max-wittig/mastermind.git
 gitea_mirror:
   gitea_url: https://maxwittig.xyz/gitea
   mirror_org: mirror
