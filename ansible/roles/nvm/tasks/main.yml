@@ -24,12 +24,23 @@
     - nvm
 
 - name: Nvm | Install node
-  shell: ". /home/{{ username }}/.nvm/nvm.sh install v{{ node_version }}"
+  shell: ". /home/{{ username }}/.nvm/nvm.sh && nvm install v{{ node_version }}"
+  args:
+    executable: /bin/bash
+  tags:
+    - nvm
+
+- name: Nvm | Set node to global
+  shell: ". /home/{{ username }}/.nvm/nvm.sh && nvm use v{{ node_version }}"
+  args:
+    executable: /bin/bash
   tags:
     - nvm
 
 - name: Nvm | Install yarn
   shell: ". /home/{{ username }}/.nvm/nvm.sh && npm install -g yarn"
+  args:
+    executable: /bin/bash
   become: yes
   tags:
     - nvm
