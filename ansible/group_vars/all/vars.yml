@@ -1,11 +1,11 @@
 ---
-docker_compose_version: 1.25.0  # https://github.com/docker/compose/releases
-grafana_version: 6.5.2          # https://github.com/grafana/grafana/releases
-prometheus_version: 2.15.1      # https://github.com/prometheus/prometheus/releases
+docker_compose_version: 1.25.1  # https://github.com/docker/compose/releases
+grafana_version: 6.5.3          # https://github.com/grafana/grafana/releases
+prometheus_version: 2.15.2      # https://github.com/prometheus/prometheus/releases
 node_exporter_version: 0.18.1   # https://github.com/prometheus/node_exporter/releases
 gitea_version: 1.10.2           # https://github.com/go-gitea/gitea/releases
 nvm_version: 0.35.2             # https://github.com/creationix/nvm/releases
-node_version: 13.5.0            # https://github.com/nodejs/node/releases
+node_version: 13.6.0            # https://github.com/nodejs/node/releases
 mongo_version: 4.2.2            # https://hub.docker.com/_/mongo
 redis_version: 5.0.7            # https://hub.docker.com/_/redis
 
