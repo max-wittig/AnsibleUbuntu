@@ -1,9 +1,8 @@
 ---
-# this requires gitea to be setup, will be on GitHub once project is done
 - name: Startpage | Include required vars
   include_vars: vars.yml
 
-- name: Startpage | Clone startpage from Gitea
+- name: Startpage | Clone startpage from Github
   git:
     repo: "{{ startpage_clone_url }}"
     dest: /opt/startpage
@@ -39,6 +38,6 @@
   when: git_cloned.changed
 
 - name: Startpage | Move assets into web_dir
-  shell: "mv /opt/startpage/dist/startpage/* {{ web_root }}/"
+  shell: "mv /opt/startpage/dist/* {{ web_root }}/"
   become: yes
   when: git_cloned.changed
