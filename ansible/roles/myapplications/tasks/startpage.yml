@@ -37,7 +37,7 @@
     NODE_OPTIONS: "--max_old_space_size=256"
   when: git_cloned.changed
 
-- name: Startpage | Move assets into web_dir
-  shell: "mv /opt/startpage/dist/* {{ web_root }}/"
+- name: Startpage | Copy assets into web_dir
+  shell: "cp -r /opt/startpage/dist/* {{ web_root }}/"
   become: yes
   when: git_cloned.changed
