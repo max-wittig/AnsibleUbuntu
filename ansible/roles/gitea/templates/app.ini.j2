@@ -1,5 +1,11 @@
 ; From https://github.com/go-gitea/gitea/blob/master/custom/conf/app.ini.sample
 
+; This file lists the default values used by Gitea
+; Copy required sections to your own app.ini (default is custom/conf/app.ini)
+; and modify as needed.
+
+; see https://docs.gitea.io/en-us/config-cheat-sheet/ for additional documentation.
+
 ; App name that shows in every page title
 APP_NAME = Gitea: Git with a cup of tea
 ; Either "dev", "prod" or "test", default is "dev"
@@ -34,6 +40,18 @@ ACCESS_CONTROL_ALLOW_ORIGIN =
 USE_COMPAT_SSH_URI = false
 ; Close issues as long as a commit on any branch marks it as fixed
 DEFAULT_CLOSE_ISSUES_VIA_COMMITS_IN_ANY_BRANCH = false
+; Allow users to push local repositories to Gitea and have them automatically created for a user or an org
+ENABLE_PUSH_CREATE_USER = false
+ENABLE_PUSH_CREATE_ORG = false
+; Comma separated list of globally disabled repo units. Allowed values: repo.issues, repo.ext_issues, repo.pulls, repo.wiki, repo.ext_wiki
+DISABLED_REPO_UNITS =
+; Comma separated list of default repo units. Allowed values: repo.code, repo.releases, repo.issues, repo.pulls, repo.wiki.
+; Note: Code and Releases can currently not be deactivated. If you specify default repo units you should still list them for future compatibility.
+; External wiki and issue tracker can't be enabled by default as it requires additional settings.
+; Disabled repo units will not be added to new repositories regardless if it is in the default list.
+DEFAULT_REPO_UNITS = repo.code,repo.releases,repo.issues,repo.pulls,repo.wiki
+; Prefix archive files by placing them in a directory named after the repository
+PREFIX_ARCHIVE_FILES = true
 
 [repository.editor]
 ; List of file extensions for which lines should be wrapped in the CodeMirror editor
@@ -68,6 +86,16 @@ WORK_IN_PROGRESS_PREFIXES=WIP:,[WIP]
 CLOSE_KEYWORDS=close,closes,closed,fix,fixes,fixed,resolve,resolves,resolved
 ; List of keywords used in Pull Request comments to automatically reopen a related issue
 REOPEN_KEYWORDS=reopen,reopens,reopened
+; In the default merge message for squash commits include at most this many commits
+DEFAULT_MERGE_MESSAGE_COMMITS_LIMIT=50
+; In the default merge message for squash commits limit the size of the commit messages to this
+DEFAULT_MERGE_MESSAGE_SIZE=5120
+; In the default merge message for squash commits walk all commits to include all authors in the Co-authored-by otherwise just use those in the limited list
+DEFAULT_MERGE_MESSAGE_ALL_AUTHORS=false
+; In default merge messages limit the number of approvers listed as Reviewed-by: to this many
+DEFAULT_MERGE_MESSAGE_MAX_APPROVERS=10
+; In default merge messages only include approvers who are official
+DEFAULT_MERGE_MESSAGE_OFFICIAL_APPROVERS_ONLY=true
 
 [repository.issue]
 ; List of reasons why a Pull Request or Issue can be locked
@@ -102,6 +130,7 @@ WIKI = never
 ; Determines when to sign on merges
 ; - basesigned: require that the parent of commit on the base repo is signed.
 ; - commitssigned: require that all the commits in the head branch are signed.
+; - approved: only sign when merging an approved pr to a protected branch
 MERGES = pubkey, twofa, basesigned, commitssigned
 
 [cors]
@@ -144,6 +173,9 @@ SHOW_USER_EMAIL = true
 DEFAULT_THEME = gitea
 ; All available themes. Allow users select personalized themes regardless of the value of `DEFAULT_THEME`.
 THEMES = gitea,arc-green
+; All available reactions. Allow users react with different emoji's
+; For the whole list look at https://gitea.com/gitea/gitea.com/issues/8
+REACTIONS = +1, -1, laugh, hooray, confused, heart, rocket, eyes
 ; Whether the full name of the users should be shown where possible. If the full name isn't set, the username will be used.
 DEFAULT_SHOW_FULL_NAME = false
 ; Whether to search within description at repository search on explore page.
@@ -253,6 +285,7 @@ DISABLE_ROUTER_LOG = false
 ; not forget to export the private key):
 ; $ openssl pkcs12 -in cert.pfx -out cert.pem -nokeys
 ; $ openssl pkcs12 -in cert.pfx -out key.pem -nocerts -nodes
+; Paths are relative to CUSTOM_PATH
 CERT_FILE = custom/https/cert.pem
 KEY_FILE = custom/https/key.pem
 ; Root directory containing templates and static files.
@@ -268,7 +301,8 @@ ENABLE_GZIP = false
 ENABLE_PPROF = false
 ; PPROF_DATA_PATH, use an absolute path when you start gitea as service
 PPROF_DATA_PATH = data/tmp/pprof
-; Landing page, can be "home", "explore", or "organizations"
+; Landing page, can be "home", "explore", "organizations" or "login"
+; The "login" choice is not a security measure but just a UI flow change, use REQUIRE_SIGNIN_VIEW to force users to log in.
 LANDING_PAGE = home
 ; Enables git-lfs support. true or false, default is false.
 LFS_START_SERVER = true
@@ -306,6 +340,10 @@ USER     = {{ postgres_user }}
 SSL_MODE = disable
 ; Use PASSWD = `your password` for quoting if you use special characters in the password.
 PASSWD   = `{{ postgres_pass }}`
+; For Postgres, schema to use if different from "public". The schema must exist beforehand,
+; the user must have creation privileges on it, and the user search path must be set
+; to the look into the schema first. e.g.:ALTER USER user SET SEARCH_PATH = schema_name,"$user",public;
+;SCHEMA =
 ; For Postgres, either "disable" (default), "require", or "verify-full"
 ; For MySQL, either "false" (default), "true", or "skip-verify"
 SSL_MODE = disable
@@ -360,6 +398,39 @@ REPO_INDEXER_INCLUDE =
 ; A comma separated list of glob patterns to exclude from the index; ; default is empty
 REPO_INDEXER_EXCLUDE =
 
+[queue]
+; Specific queues can be individually configured with [queue.name]. [queue] provides defaults
+;
+; General queue queue type, currently support: persistable-channel, channel, level, redis, dummy
+; default to persistable-channel
+TYPE = persistable-channel
+; data-dir for storing persistable queues and level queues, individual queues will be named by their type
+DATADIR = queues/
+; Default queue length before a channel queue will block
+LENGTH = 20
+; Batch size to send for batched queues
+BATCH_LENGTH = 20
+; Connection string for redis queues this will store the redis connection string.
+CONN_STR = "addrs=127.0.0.1:6379 db=0"
+; Provide the suffix of the default redis queue name - specific queues can be overriden within in their [queue.name] sections.
+QUEUE_NAME = "_queue"
+; If the queue cannot be created at startup - level queues may need a timeout at startup - wrap the queue:
+WRAP_IF_NECESSARY = true
+; Attempt to create the wrapped queue at max
+MAX_ATTEMPTS = 10
+; Timeout queue creation
+TIMEOUT = 15m30s
+; Create a pool with this many workers
+WORKERS = 1
+; Dynamically scale the worker pool to at this many workers
+MAX_WORKERS = 10
+; Add boost workers when the queue blocks for BLOCK_TIMEOUT
+BLOCK_TIMEOUT = 1s
+; Remove the boost workers after BOOST_TIMEOUT
+BOOST_TIMEOUT = 5m
+; During a boost add BOOST_WORKERS
+BOOST_WORKERS = 5
+
 [admin]
 ; Disallow regular (non-admin) users from creating organizations.
 DISABLE_REGULAR_ORG_CREATION = false
@@ -394,7 +465,6 @@ PASSWORD_COMPLEXITY = lower,upper,digit,spec
 PASSWORD_HASH_ALGO = pbkdf2
 ; Set false to allow JavaScript to read CSRF cookie
 CSRF_COOKIE_HTTP_ONLY = true
-
 
 [openid]
 ;
@@ -451,7 +521,7 @@ ENABLE_NOTIFY_MAIL = false
 ; This setting enables gitea to be signed in with HTTP BASIC Authentication using the user's password
 ; If you set this to false you will not be able to access the tokens endpoints on the API with your password
 ; Please note that setting this to false will not disable OAuth Basic or Basic authentication using a token
-ENABLE_BASIC_AUTHENTICATION = true
+ENABLE_BASIC_AUTHENTICATION = false
 ; More detail: https://github.com/gogits/gogs/issues/165
 ENABLE_REVERSE_PROXY_AUTHENTICATION = false
 ENABLE_REVERSE_PROXY_AUTO_REGISTRATION = false
@@ -498,9 +568,11 @@ DEFAULT_ALLOW_ONLY_CONTRIBUTORS_TO_TRACK_TIME = true
 ; Default value for the domain part of the user's email address in the git log
 ; if he has set KeepEmailPrivate to true. The user's email will be replaced with a
 ; concatenation of the user name in lower case, "@" and NO_REPLY_ADDRESS.
-NO_REPLY_ADDRESS = noreply.example.org
+NO_REPLY_ADDRESS = noreply.%(DOMAIN)s
 ; Show Registration button
 SHOW_REGISTRATION_BUTTON = false
+; Show milestones dashboard page - a view of all the user's milestones
+SHOW_MILESTONES_DASHBOARD_PAGE = true
 ; Default value for AutoWatchNewRepos
 ; When adding a repo to a team or creating a new repo all team members will watch the
 ; repo automatically if enabled
@@ -562,6 +634,8 @@ SENDMAIL_PATH = sendmail
 SENDMAIL_ARGS =
 
 [cache]
+; if the cache enabled
+ENABLED = true
 ; Either "memory", "redis", or "memcache", default is "memory"
 ADAPTER = memory
 ; For "memory" only, GC interval in seconds, default is 60
@@ -574,9 +648,19 @@ HOST =
 ; Setting it to 0 disables caching
 ITEM_TTL = 16h
 
+; Last commit cache
+[cache.last_commit]
+; if the cache enabled
+ENABLED = true
+; Time to keep items in cache if not used, default is 8760 hours.
+; Setting it to 0 disables caching
+ITEM_TTL = 8760h
+; Only enable the cache when repository's commits count great than
+COMMITS_COUNT = 1000
+
 [session]
 ; Either "memory", "file", or "redis", default is "memory"
-PROVIDER = file
+PROVIDER = memory
 ; Provider config options
 ; memory: doesn't have any config yet
 ; file: session file path, e.g. `data/sessions`
@@ -870,6 +954,12 @@ SHOW_FOOTER_BRANDING = false
 SHOW_FOOTER_VERSION = true
 ; Show template execution time in the footer
 SHOW_FOOTER_TEMPLATE_LOAD_TIME = true
+
+[markup.sanitizer]
+; The following keys can be used multiple times to define sanitation policy rules.
+;ELEMENT = span
+;ALLOW_ATTR = class
+;REGEXP = ^(info|warning|error)$
 
 [markup.asciidoc]
 ENABLED = true
