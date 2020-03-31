@@ -20,7 +20,6 @@
       pull: yes
     name: steam_games_viewer
     force_source: yes
-  when: git_cloned.changed
 
 - name: SteamGamesViewer | Run docker image
   docker_container:
@@ -33,4 +32,3 @@
     env:
       STEAM_API_KEY: "{{ steam_api_key }}"
       BASE_URL: "/steam"
-  when: git_cloned.changed

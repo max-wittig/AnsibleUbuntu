@@ -10,7 +10,6 @@
     clone: yes
     force: yes
   become: yes
-  register: git_cloned
 
 - name: Mastermind | Change owner of directory
   file:
@@ -19,7 +18,6 @@
     recurse: yes
     owner: "{{ username }}"
   become: yes
-  when: git_cloned.changed
 
 - name: Mastermind | Install requirements
   shell: ". ~/.nvm/nvm.sh && yarn"
@@ -27,7 +25,6 @@
     chdir: /opt/mastermind
   environment:
     NODE_OPTIONS: "--max_old_space_size=256"
-  when: git_cloned.changed
 
 - name: Mastermind | Build mastermind
   shell: ". ~/.nvm/nvm.sh && yarn build"
@@ -36,23 +33,19 @@
   environment:
     NODE_OPTIONS: "--max_old_space_size=256"
     BASE_URL: /mastermind
-  when: git_cloned.changed
 
 - name: Mastermind | Remove web directory
   file:
     path: "{{ web_root }}/mastermind/"
     state: absent
   become: yes
-  when: git_cloned.changed
 
 - name: Mastermind | Create nginx directory
   file:
     path: "{{ web_root }}/mastermind/"
     state: directory
   become: yes
-  when: git_cloned.changed
 
 - name: Mastermind | Move assets into web_dir
   shell: "mv /opt/mastermind/dist/* {{ web_root }}/mastermind/"
   become: yes
-  when: git_cloned.changed

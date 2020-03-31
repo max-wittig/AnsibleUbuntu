@@ -19,7 +19,6 @@
     recurse: yes
     owner: "{{ username }}"
   become: yes
-  when: git_cloned.changed
 
 - name: Startpage | Install requirements
   shell: ". ~/.nvm/nvm.sh && yarn"
@@ -27,7 +26,6 @@
     chdir: /opt/startpage
   environment:
     NODE_OPTIONS: "--max_old_space_size=256"
-  when: git_cloned.changed
 
 - name: Startpage | Build startpage
   shell: ". ~/.nvm/nvm.sh && yarn build"
@@ -35,9 +33,7 @@
     chdir: /opt/startpage
   environment:
     NODE_OPTIONS: "--max_old_space_size=256"
-  when: git_cloned.changed
 
 - name: Startpage | Copy assets into web_dir
   shell: "cp -r /opt/startpage/dist/* {{ web_root }}/"
   become: yes
-  when: git_cloned.changed
