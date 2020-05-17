@@ -10,6 +10,13 @@ resource "digitalocean_record" "A" {
   value  = digitalocean_droplet.web.ipv4_address
 }
 
+resource "digitalocean_record" "AAAA" {
+  domain = digitalocean_domain.default.name
+  type   = "AAAA"
+  name   = "@"
+  value  = digitalocean_droplet.web.ipv6_address
+}
+
 resource "digitalocean_record" "do1" {
   domain = digitalocean_domain.default.name
   type   = "NS"
