@@ -16,9 +16,10 @@ resource "digitalocean_ssh_key" "default" {
 
 resource "digitalocean_droplet" "web" {
   image      = "39342610" # ubuntu-18.10
-  name       = "ubuntu-19-10"
+  name       = "ubuntu-20-03"
   region     = "fra1"
   size       = "s-1vcpu-1gb"
   monitoring = "false"
+  ipv6       = "true"
   ssh_keys   = local.ssh_keys
 }
