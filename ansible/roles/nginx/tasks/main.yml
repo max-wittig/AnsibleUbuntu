@@ -47,8 +47,8 @@
     - nginx
   become: yes
 
-- name: Nginx | Restart nginx
-  service:
+  - name: Nginx | Restart nginx
+  systemd:
     name: nginx
     state: restarted
   become: yes
@@ -88,10 +88,10 @@
   tags:
     - nginx
 
-- name: Nginx | Reload nginx
-  service:
+- name: Nginx | Restart nginx
+  systemd:
     name: nginx
-    state: reloaded
+    state: restarted
   become: yes
   tags:
     - nginx

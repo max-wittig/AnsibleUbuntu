@@ -1,4 +1,12 @@
 ---
+- name: Docker | Make data docker dir
+  file:
+    path: /mnt/data/docker
+    state: directory
+  become: yes
+  tags:
+    - docker
+
 - name: Docker | Install docker dependencies
   become: yes
   apt:
@@ -42,6 +50,26 @@
     name: docker-ce
     state: latest
     install_recommends: no
+  tags:
+    - docker
+
+- name: Docker | Modify data dir
+  lineinfile: 
+    dest: /lib/systemd/system/docker.service
+    regexp: "^ExecStart="
+    line: "ExecStart=/usr/bin/dockerd -g /mnt/data/docker -H fd:// --containerd=/run/containerd/containerd.sock"
+    state: present
+  register: data_dir
+  become: yes
+  tags:
+    - docker
+
+- name: Docker | Restart daemon
+  systemd:
+    name: docker
+    state: restarted
+    daemon_reload: yes
+  when: data_dir.changed
   tags:
     - docker
 
