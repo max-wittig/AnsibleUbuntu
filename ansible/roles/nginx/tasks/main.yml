@@ -47,7 +47,7 @@
     - nginx
   become: yes
 
-  - name: Nginx | Restart nginx
+- name: Nginx | Restart nginx
   systemd:
     name: nginx
     state: restarted
