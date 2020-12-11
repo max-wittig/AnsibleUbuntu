@@ -4,8 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-ansible = "*"
 jmespath = "*"
+ansible = "*"
 
 [dev-packages]
 
